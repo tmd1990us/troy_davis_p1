@@ -8,6 +8,9 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
+/**
+ * A Class to get a connection from the connection factory
+ */
 public class ConnectionFactory {
     private Properties props = new Properties();
     private static ConnectionFactory connFactory = new ConnectionFactory();
@@ -22,10 +25,18 @@ public class ConnectionFactory {
         }
     }
 
+    /**
+     * Gets the current instance of the Connection to the DB
+     * @return returns and instance of thte connection
+     */
     public static ConnectionFactory getInstance(){
         return connFactory;
     }
 
+    /**
+     * A method to get a connection from the connection factory
+     * @return returns a connection to the DB
+     */
     public Connection getConnection(){
         Connection conn = null;
         try {
