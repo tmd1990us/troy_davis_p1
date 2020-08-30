@@ -29,7 +29,6 @@ public class ConnectionFactory {
     public Connection getConnection(){
         Connection conn = null;
         try {
-
             // Force the JVM to load the PostGreSQL JDBC driver
             Class.forName("org.postgresql.Driver");
             conn = DriverManager.getConnection(props.getProperty("url"),

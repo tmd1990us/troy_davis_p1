@@ -25,11 +25,12 @@ public class ReimbursementsRepository {
         super();
     }
 
+    //---------------------------------- CREATE -------------------------------------------- //
     /**
      * Adds a reimburement to the database, Does not handle Images!
-     * @param reimbursement
-     * @throws SQLException
-     * @throws IOException
+     * @param reimbursement the reimbursement to be added to the DB
+     * @throws SQLException e
+     * @throws IOException e
      */
     public boolean addReimbursement(Reimbursement reimbursement) throws SQLException, IOException {
         try(Connection conn = ConnectionFactory.getInstance().getConnection()) {
@@ -50,11 +51,13 @@ public class ReimbursementsRepository {
         }
     }
 
+    //---------------------------------- READ -------------------------------------------- //
+
     /**
      * A method to get Reimbursements by the id of the reimbursement itself
-     * @param reimbId
-     * @return
-     * @throws SQLException
+     * @param reimbId The ID of the reimbursement in the database that is requested
+     * @return returns an Option Reimbursement object
+     * @throws SQLException e
      */
     public Optional<Reimbursement> getAReimbByReimbId(Integer reimbId) throws SQLException {
         Optional<Reimbursement> reimbursement = Optional.empty();
@@ -73,9 +76,9 @@ public class ReimbursementsRepository {
 
     /**
      * A method to get all of the records for an author given their id
-     * @param authorId
-     * @return
-     * @throws SQLException
+     * @param authorId the ID of the author of the reimbursement
+     * @return a set of reimbursements mapped by the MapResultSet method
+     * @throws SQLException e
      */
     public Set<Reimbursement> getAllReimbSetByAuthorId(Integer authorId) throws SQLException {
         Set<Reimbursement> reimbursements = new HashSet<>();
@@ -94,10 +97,10 @@ public class ReimbursementsRepository {
 
     /**
      * A method to get all of the records for an author given their id and filter by status
-     * @param authorId
-     * @param reStat
-     * @return
-     * @throws SQLException
+     * @param authorId the ID of the author of the reimbursement
+     * @param reStat the status that the reimbursement is to be set to
+     * @return a set of reimbursements mapped by the MapResultSet method
+     * @throws SQLException e
      */
     public Set<Reimbursement> getAllReimbSetByAuthorIdAndStatus(Integer authorId, ReimbursementStatus reStat) throws SQLException {
         Set<Reimbursement> reimbursements = new HashSet<>();
@@ -115,10 +118,10 @@ public class ReimbursementsRepository {
 
     /**
      * A method to get all of the records for an author given their id and filter by type
-     * @param authorId
-     * @param reType
-     * @return
-     * @throws SQLException
+     * @param authorId ID of the Author User
+     * @param reType the Type to update the record to
+     * @return a set of reimbursements mapped by the MapResultSet method
+     * @throws SQLException e
      */
     public Set<Reimbursement> getAllReimbSetByAuthorIdAndType(Integer authorId, ReimbursementType reType) throws SQLException {
         Set<Reimbursement> reimbursements = new HashSet<>();
@@ -136,9 +139,9 @@ public class ReimbursementsRepository {
 
     /**
      * A method to get all of the records for a resolver given their id
-     * @param resolverId
-     * @return
-     * @throws SQLException
+     * @param resolverId ID of the Resolver User
+     * @return a set of reimbursements mapped by the MapResultSet method
+     * @throws SQLException e
      */
     public Set<Reimbursement> getAllReimbSetByResolverId(Integer resolverId) throws SQLException {
         Set<Reimbursement> reimbursements = new HashSet<>();
@@ -157,10 +160,10 @@ public class ReimbursementsRepository {
 
     /**
      * A method to get all of the records for a resolver given their id and filter by status
-     * @param resolverId
-     * @param reStat
-     * @return
-     * @throws SQLException
+     * @param resolverId  ID of the Resolver User
+     * @param reStat the status to update the record to
+     * @return a set of reimbursements mapped by the MapResultSet method
+     * @throws SQLException e
      */
     public Set<Reimbursement> getAllReimbSetByResolverIdAndStatus(Integer resolverId, ReimbursementStatus reStat) throws SQLException {
         Set<Reimbursement> reimbursements = new HashSet<>();
@@ -178,10 +181,10 @@ public class ReimbursementsRepository {
 
     /**
      * A  method to get all of the records for a resolver given their id and filter by type
-     * @param resolverId
-     * @param reType
-     * @return
-     * @throws SQLException
+     * @param resolverId ID of the Resolver User
+     * @param reType type of Reimbursements to select by
+     * @return a set of reimbursements mapped by the MapResultSet method
+     * @throws SQLException e
      */
     public Set<Reimbursement> getAllReimbSetByResolverIdAndType(Integer resolverId, ReimbursementType reType) throws SQLException {
         Set<Reimbursement> reimbursements = new HashSet<>();
@@ -197,12 +200,13 @@ public class ReimbursementsRepository {
         return reimbursements;
     }
 
+    //---------------------------------- UPDATE -------------------------------------------- //
     /**
      * A method to update only the resolved timestamp by the id of the reimbursement
-     * @param reimbId
-     * @param timestamp
-     * @return
-     * @throws SQLException
+     * @param reimbId The ID of the reimbursement in the database that is requested
+     * @param timestamp an SQL timestamp object to set the time resolved to
+     * @return returns true if one and only one record was updated
+     * @throws SQLException e
      */
     public boolean updateResolvedTimeStampByReimbId(Integer reimbId, Timestamp timestamp) throws SQLException {
 
@@ -221,10 +225,10 @@ public class ReimbursementsRepository {
 
     /**
      * A method to update only the resolver ID by the id of the reimbursement
-     * @param reimbId
-     * @param resolverId
-     * @return
-     * @throws SQLException
+     * @param reimbId The ID of the reimbursement in the database that is requested
+     * @param resolverId the ID of the user that resolves the record to update the record to
+     * @return returns true if one and only one record was updated
+     * @throws SQLException e
      */
     public boolean updateResolverIdByReimbId(Integer reimbId, Integer resolverId) throws SQLException {
 
@@ -243,10 +247,10 @@ public class ReimbursementsRepository {
 
     /**
      * A method to update only the Reimb. TYPE by the id of the Reimbursement
-     * @param reimbId
-     * @param reimbursementType
-     * @return
-     * @throws SQLException
+     * @param reimbId The ID of the reimbursement in the database that is requested
+     * @param reimbursementType the type to update the record to
+     * @return returns true if one and only one record was updated
+     * @throws SQLException e
      */
     public boolean updateReimbursementTypeByReimbId(Integer reimbId, ReimbursementType reimbursementType) throws SQLException {
         try(Connection conn = ConnectionFactory.getInstance().getConnection()) {
@@ -264,10 +268,10 @@ public class ReimbursementsRepository {
 
     /**
      * A method to update the status of a reimbursement in the database
-     * @param reimbId
-     * @param newReimbStatus
-     * @return
-     * @throws SQLException
+     * @param reimbId The ID of the reimbursement in the database that is requested
+     * @param newReimbStatus the status to update the record to
+     * @return returns true if one and only one record was updated
+     * @throws SQLException e
      */
     public boolean updateReimbursementStatusByReimbId(Integer reimbId, ReimbursementStatus newReimbStatus) throws SQLException {
         try(Connection conn = ConnectionFactory.getInstance().getConnection()) {
@@ -299,11 +303,32 @@ public class ReimbursementsRepository {
         }
     }
 
+    //---------------------------------- DELETE -------------------------------------------- //
+
+    /**
+     * A method to delete a single Reimbursement from the database
+     * @param reimbId the ID of the record to be deleted
+     * @return returns true if one and only one record is updated
+     * @throws SQLException e
+     */
+    public boolean delete(Integer reimbId) throws SQLException {
+        try(Connection conn = ConnectionFactory.getInstance().getConnection()) {
+            String sql = "DELETE FROM project_1.ers_reimbursements\n" +
+                         "WHERE id=? ";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1,reimbId);
+            //get the number of affected rows
+            int rowsInserted = ps.executeUpdate();
+            return rowsInserted != 0;
+        }
+    }
+
+    //---------------------------------- UTIL -------------------------------------------- //
     /**
      * A method to map the result sets from the reimbursement queries
-     * @param rs
-     * @return
-     * @throws SQLException
+     * @param rs a resultset
+     * @return a set of reimbursements
+     * @throws SQLException e
      */
     private Set<Reimbursement> mapResultSet(ResultSet rs) throws SQLException {
         Set<Reimbursement> reimbursements = new HashSet<>();
