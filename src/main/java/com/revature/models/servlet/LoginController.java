@@ -1,5 +1,7 @@
 package com.revature.models.servlet;
 
+import com.revature.models.User;
+
 import javax.servlet.http.HttpServletRequest;
 
 public class LoginController {
@@ -14,6 +16,8 @@ public class LoginController {
         if(!req.getMethod().equals("POST")){
             return "/html/login.html";
         }
+
+        User logInUser = new User();
 
         String username = req.getParameter("username");
         String password = req.getParameter("password");
