@@ -57,12 +57,12 @@ create table ers_users(
 
 -- Drop table
 
- DROP TABLE project_1.ers_reimbursements;
+-- DROP TABLE project_1.ers_reimbursements;
 
 create TABLE project_1.ers_reimbursements (
 	id serial NOT NULL,
 	amount numeric(6,2) NOT NULL,
-	submitted timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+	submitted timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	resolved timestamp NULL,
 	description varchar(1000) NULL,
 	reciept bytea,

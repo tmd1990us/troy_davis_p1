@@ -24,8 +24,9 @@ public class RequestHelper {
                 return HomeController.home(req);
             case "/ers/api/create_account":
                 System.out.println("in create account case");
-
-
+            case "/ers/api/submit_reimbursement_request.html":
+                System.out.println("create reimb case");
+                return SubmitReimbursementController.home(req);
             default:
                 System.out.println("in login case");
                 return "/html/badlogin.html";
