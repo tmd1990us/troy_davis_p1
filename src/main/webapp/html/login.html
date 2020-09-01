@@ -11,13 +11,13 @@
 <body>
     <div class="login-container">
         <h3>Login to your ERS account:</h3>
+        <form method="post" action="/ers/api/login">
+            <p>Please Log in</p>
+            <input placeholder="enter username" name="username"/><br>
+            <input placeholder="enter password" name="password"/><br>
+            <input type="submit" value="login"/><br>
+        </form>
     </div>
-    <form method="post" action="/ers/api/login">
-        <p>Please Log in</p>
-        <input placeholder="enter username" name="username"/><br>
-        <input placeholder="enter password" name="password"/><br>
-        <input type="submit" value="login"/><br>
-    </form>
 
 
 

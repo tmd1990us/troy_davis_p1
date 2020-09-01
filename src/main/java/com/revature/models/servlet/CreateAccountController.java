@@ -2,10 +2,16 @@ package com.revature.models.servlet;
 
 import com.revature.models.User;
 import com.revature.repositories.UserRepository;
+import com.revature.util.ConnectionFactory;
 
 import javax.servlet.http.HttpServletRequest;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 public class CreateAccountController {
+    //TODO: SEPARATE USER REPO INSTANTIATION
+
+
     public static String login(HttpServletRequest req){
 
         /**
@@ -15,7 +21,7 @@ public class CreateAccountController {
          */
 
         if(!req.getMethod().equals("POST")){
-            return "/html/login.html";
+            return "/html/create_account.html";
         }
 
         User newUser = new User();
@@ -25,6 +31,20 @@ public class CreateAccountController {
         newUser.setFirstname(req.getParameter("first_name"));
         newUser.setLastname(req.getParameter("last_name"));
         newUser.setEmail(req.getParameter("email"));
+
+        UserRepository userRepository = new UserRepository();
+        try {
+            if(userRepository.addUser(newUser)){
+                req.getSession().setAttribute("loggedusername", newUser.getUsername());
+                req.getSession().setAttribute("loggedpassword",newUser.getPassword());
+                return "/api/home";
+            }else {
+                return "/api/wrongcreds";
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
 
         //will need to interact with the database to validate usernames and passwords
 //        if(!(username.equals("cheese") && password.equals("louise"))){
@@ -37,6 +57,7 @@ public class CreateAccountController {
 //            req.getSession().setAttribute("loggedpassword",password);
 //            return "/api/home";
 //        }
+
         return "/api/home";
     }
 }
