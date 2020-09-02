@@ -1,4 +1,4 @@
-package com.revature.models.servlet;
+package com.revature.models.controller;
 
 import com.revature.models.Role;
 import com.revature.models.User;
@@ -13,7 +13,7 @@ public class CreateAccountController {
     //TODO: SEPARATE USER REPO INSTANTIATION
 
 
-    public static String login(HttpServletRequest req){
+    public static String login(HttpServletRequest req, UserRepository userRepo){
 
         /**
          * may implement route guarding here for your endpoints
@@ -33,12 +33,12 @@ public class CreateAccountController {
         newUser.setLastname(req.getParameter("last_name"));
         newUser.setEmail(req.getParameter("email"));
         newUser.setUserRole(Role.EMPLOYEE);
-        UserRepository userRepository = new UserRepository();
+
         try {
-            if(userRepository.addUser(newUser)){
+            if(userRepo.addUser(newUser)){
                 req.getSession().setAttribute("loggedusername", newUser.getUsername());
                 req.getSession().setAttribute("loggedpassword",newUser.getPassword());
-                return "/api/home";
+                return "/api/employeeDash";
             }else {
                 return "/api/wrongcreds";
             }

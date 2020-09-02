@@ -1,10 +1,12 @@
 package com.revature.models.servlet;
 
+import com.revature.models.Role;
 import com.revature.models.User;
 import com.revature.repositories.UserRepository;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.SQLException;
+import java.util.Optional;
 
 public class LoginController {
     public static String login(HttpServletRequest req, UserRepository userRepo){
@@ -19,7 +21,7 @@ public class LoginController {
             return "/html/login.html";
         }
 
-        User logInUser = new User();
+
 
         String username = req.getParameter("username");
         String password = req.getParameter("password");
@@ -29,13 +31,30 @@ public class LoginController {
 
         //will need to interact with the database to validate usernames and passwords
         try {
+            Optional<User> logInUser =  userRepo.getAUserByUsernameAndPassword(req.getParameter("username"),req.getParameter("password"));
 
-            if(userRepo.getAUserByUsernameAndPassword(username,password).isPresent()){
+            Role loggedInRole = logInUser.get().getUserRole();
+            if(logInUser.isPresent()){
                 req.getSession().setAttribute("loggedusername", username);
                 req.getSession().setAttribute("loggedpassword",password);
-                req.getSession().setAttribute("loggedrole", userRepo.getAUserByUsernameAndPassword(username,password).get().getUserRole());
-                System.out.println(logInUser.getUserRole());
-                return "/api/home";
+                req.getSession().setAttribute("loggedrole", logInUser.get().getUserRole());
+                req.getSession().setAttribute("loggeruser",logInUser);
+                System.out.println(logInUser.toString());
+                if (loggedInRole == Role.EMPLOYEE){
+                    System.out.println("sending to EmployeeDash from Login Controller");
+                    return "/ers/api/employeeDash";
+                } else if (loggedInRole == Role.ADMIN){
+                    System.out.println("sending to AdminDash from Login Controller");
+                    //TODO: IMPLEMENT ADMINdash
+                    return "/api/home";
+                } else if (loggedInRole == Role.FINANCE_MANAGER){
+                    System.out.println("sending to FinManDash from Login Controller");
+                    //TODO: IMPLEMENT finmandash
+                    return "/api/home";
+                }
+
+                System.out.println(logInUser);
+
 
             }
         } catch (SQLException e) {

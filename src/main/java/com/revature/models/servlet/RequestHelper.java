@@ -1,5 +1,8 @@
 package com.revature.models.servlet;
 
+import com.revature.models.controller.CreateAccountController;
+import com.revature.models.controller.EmployeeDashboardController;
+import com.revature.models.controller.SubmitReimbursementController;
 import com.revature.repositories.UserRepository;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,13 +28,17 @@ public class RequestHelper {
                 //modularized
                 return HomeController.home(req);
 
+            case "/ers/employeeDash":
+                System.out.println("in Employee Dash Case");
+
+                return EmployeeDashboardController.empDash();
 
             case "/ers/api/create_account":
                 System.out.println("in create account case");
-                return CreateAccountController.login(req);
+                return CreateAccountController.login(req, userRepository);
 
 
-            case "/ers/api/submit_reimbursement_request.html":
+            case "/ers/api/submit_reimbursement_request":
                 System.out.println("create reimb case");
                 return SubmitReimbursementController.home(req);
 

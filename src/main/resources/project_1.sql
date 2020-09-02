@@ -101,10 +101,10 @@ REFERENCES project_1.ers_users(id);
 
 INSERT INTO project_1.ers_users
 (username, password, first_name, last_name, email, user_role_id)
-VALUES('tmd1990', crypt('password', gen_salt('bf', 10)), 'troy', 'davis', 'tmd1990@t.co', 1);
+VALUES('tmd1999', crypt('password', gen_salt('bf', 10)), 'troy', 'davis', 'tmd1999@t.co', 1);
 
 select * from project_1.ers_users eu 
-where password = crypt('password', password);
+where password = project_1.crypt('password', password);
 
 --https://www.meetspaceapp.com/2016/04/12/passwords-postgresql-pgcrypto.html
 
