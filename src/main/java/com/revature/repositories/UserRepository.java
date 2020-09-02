@@ -15,7 +15,7 @@ import java.util.Set;
 
 public class UserRepository {
     private String baseQuery = "SELECT * FROM project_1.ers_users eu ";
-    private String baseInsert = "INSERT INTO project_1.ers_users eu ";
+    private String baseInsert = "INSERT INTO project_1.ers_users ";
     private String baseUpdate = "UPDATE project_1.ers_users eu ";
 
     public UserRepository(){
@@ -34,7 +34,7 @@ public class UserRepository {
         try(Connection conn = ConnectionFactory.getInstance().getConnection()) {
             String sql = baseInsert +
                          "(username, password, first_name, last_name, email, user_role_id)\n" +
-                         "VALUES(?, crypt(?, gen_salt('bf', 10)), ?, ?, ?, ?);\n";
+                         "VALUES(?, project_1.crypt(?, project_1.gen_salt('bf', 10)), ?, ?, ?, ?);\n";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1,newUser.getUsername());
             ps.setString(2,newUser.getPassword());
@@ -96,7 +96,7 @@ public class UserRepository {
     public Optional<User> getAUserByUsernameAndPassword(String userName, String password) throws SQLException {
         Optional<User> user = Optional.empty();
         try (Connection conn = ConnectionFactory.getInstance().getConnection()){
-            String sql = baseQuery + "WHERE username = ? AND password = ?";
+            String sql = baseQuery + "WHERE username = ? AND  password = project_1.crypt(?, password)";
             PreparedStatement psmt = conn.prepareStatement(sql);
             psmt.setString(1,userName);
             psmt.setString(2,password);

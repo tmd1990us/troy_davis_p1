@@ -1,5 +1,6 @@
 package com.revature.models.servlet;
 
+import com.revature.models.Role;
 import com.revature.models.User;
 import com.revature.repositories.UserRepository;
 import com.revature.util.ConnectionFactory;
@@ -31,7 +32,7 @@ public class CreateAccountController {
         newUser.setFirstname(req.getParameter("first_name"));
         newUser.setLastname(req.getParameter("last_name"));
         newUser.setEmail(req.getParameter("email"));
-
+        newUser.setUserRole(Role.EMPLOYEE);
         UserRepository userRepository = new UserRepository();
         try {
             if(userRepository.addUser(newUser)){
