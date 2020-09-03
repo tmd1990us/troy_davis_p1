@@ -4,14 +4,15 @@ import com.revature.models.ReimbursementType;
 import com.revature.models.Role;
 import com.revature.models.User;
 import com.revature.util.ConnectionFactory;
+import com.revature.util.HibernateUtils;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 public class UserRepository {
     private String baseQuery = "SELECT * FROM project_1.ers_users eu ";
@@ -41,7 +42,7 @@ public class UserRepository {
             ps.setString(3,newUser.getFirstname());
             ps.setString(4,newUser.getLastname());
             ps.setString(5,newUser.getEmail());
-            ps.setInt(6,newUser.getUserRole().ordinal() + 1);
+            //ps.setInt(6,newUser.getUserRole().ordinal() + 1);
             //get the number of affected rows
             int rowsInserted = ps.executeUpdate();
             return rowsInserted != 0;
@@ -49,6 +50,32 @@ public class UserRepository {
     }
 
     //---------------------------------- READ -------------------------------------------- //
+
+    public List<User> getAllusers() throws SQLException{
+        Session session =
+                //HibernateUtils.getSessionFactoryFileConfig().openSession();
+                HibernateUtils.getSessionFactoryProgrammaticConfig().openSession();
+        Transaction tx = null;
+        List<User> users = new ArrayList<>();
+        try {
+            tx = session.beginTransaction();
+
+            users = session.createQuery("FROM User", User.class).list();
+            for (User u : users) {
+                System.out.println("Entry: " + u.getFirstname() + " " +
+                        u.getLastname() + ", " + u.getUsername() + ", " + u.getEmail());
+            }
+            tx.commit();
+        }
+        catch (Exception e) {
+            if (tx!=null) tx.rollback();
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+        return users;
+    }
+
 
     /**
      * A method to get a single user by ID
@@ -185,7 +212,7 @@ public class UserRepository {
             temp.setPassword(rs.getString("password"));
             temp.setFirstname(rs.getString("first_name"));
             temp.setLastname(rs.getString("last_name"));
-            temp.setUserRole(Role.getByName(rs.getString("user_role_id")));
+            //temp.setUserRole(Role.getByName(rs.getString("user_role_id")));
             users.add(temp);
         }
         return users;
