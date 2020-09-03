@@ -57,12 +57,12 @@ create table ers_users(
 
 -- Drop table
 
- DROP TABLE project_1.ers_reimbursements;
+-- DROP TABLE project_1.ers_reimbursements;
 
 create TABLE project_1.ers_reimbursements (
 	id serial NOT NULL,
 	amount numeric(6,2) NOT NULL,
-	submitted timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+	submitted timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	resolved timestamp NULL,
 	description varchar(1000) NULL,
 	reciept bytea,
@@ -101,10 +101,10 @@ REFERENCES project_1.ers_users(id);
 
 INSERT INTO project_1.ers_users
 (username, password, first_name, last_name, email, user_role_id)
-VALUES('tmd1990', crypt('password', gen_salt('bf', 10)), 'troy', 'davis', 'tmd1990@t.co', 1);
+VALUES('tmd1999', crypt('password', gen_salt('bf', 10)), 'troy', 'davis', 'tmd1999@t.co', 1);
 
 select * from project_1.ers_users eu 
-where password = crypt('password', password);
+where password = project_1.crypt('password', password);
 
 --https://www.meetspaceapp.com/2016/04/12/passwords-postgresql-pgcrypto.html
 

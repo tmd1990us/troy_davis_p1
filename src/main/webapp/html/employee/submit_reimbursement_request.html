@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ERS Submit Reimbursement Request</title>
+
+    <link rel="stylesheet" type="text/css" href="/ers/css/ers_styles.css"/>
+
+</head>
+<body>
+    <div id="submit-reimbursement-container">
+        <h3>Submit A Reimbursement Request</h3>
+    </div>
+</br>
+    <form method="post" action="/ers/api/submit_reimbursement">
+        <p>Please Enter Reimbursement Details</p>
+    </br>
+        <label for="amount">Example Amount</label>
+        <input placeholder="$" id="amount" name="amount"/><br>
+    </br>
+        <label for="description">Enter Details</label>
+        <textarea class="form-control" id="description" rows="3" 
+            placeholder="Description of Reimbursement"></textarea>
+    </br>
+        <label for="type">Select Type</label>
+        <select class="form-control" id="type">
+        <option>Lodging</option>
+        <option>Travel</option>
+        <option>Food</option>
+        <option>Other</option>
+        </select>
+    </br>
+    </br>
+        <input type="file" id="image" onchange="showFiles(event)" accept="image/x-png,image/jpeg">
+    </br>
+        <input type="submit" value="submit"/><br>
+    </form>
+
+
+
+
+
+    
+
+
+
+
+
+
+
+
+    <!-- JS, Popper.js, and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+
+</body>
+</html>

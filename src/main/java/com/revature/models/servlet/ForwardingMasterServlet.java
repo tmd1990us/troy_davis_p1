@@ -1,5 +1,7 @@
 package com.revature.models.servlet;
 
+import com.revature.repositories.UserRepository;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -9,6 +11,8 @@ import java.io.IOException;
 
 @WebServlet("/api/*")
 public class ForwardingMasterServlet extends HttpServlet {
+
+
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

@@ -13,17 +13,17 @@
 
     <div class="login-container">
         <h3>Create your ERS account:</h3>
+    
+        <form method="post" action="/ers/api/create_account">
+            <p>Please Log in</p>
+            <input placeholder="enter first name" name="first_name"/><br>
+            <input placeholder="enter last name" name="last_name"/><br>
+            <input placeholder="enter username" name="username"/><br>
+            <input placeholder="enter password" name="password"/><br>
+            <input placeholder="enter email" name="email"/><br>
+            <input type="submit" value="Create Account"/><br>
+        </form>
     </div>
-    <form method="post" action="/ers/api/create_account">
-        <p>Please Log in</p>
-        <input placeholder="enter  first name" name="first_name"/><br>
-        <input placeholder="enter  last name" name="last_name"/><br>
-        <input placeholder="enter username" name="username"/><br>
-        <input placeholder="enter password" name="password"/><br>
-        <input placeholder="enter email" name="email"/><br>
-        <input type="submit" value="create_account"/><br>
-    </form>
-
 
 
 
@@ -31,6 +31,8 @@
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+
+
 
 </body>
 </html>
