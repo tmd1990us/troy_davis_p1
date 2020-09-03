@@ -1,4 +1,4 @@
-package com.revature.models.servlet;
+package com.revature.models.controller;
 
 import com.revature.models.Role;
 import com.revature.models.User;
@@ -42,7 +42,7 @@ public class LoginController {
                 System.out.println(logInUser.toString());
                 if (loggedInRole == Role.EMPLOYEE){
                     System.out.println("sending to EmployeeDash from Login Controller");
-                    return "/ers/api/employeeDash";
+                    return "/api/employeeDash";
                 } else if (loggedInRole == Role.ADMIN){
                     System.out.println("sending to AdminDash from Login Controller");
                     //TODO: IMPLEMENT ADMINdash
