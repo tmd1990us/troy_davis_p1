@@ -16,6 +16,7 @@ public class User {
     @Column(name = "username")
     private String username;
 
+    @Column(name = "password")
     private String password;
 
     @Column(name = "first_name")
@@ -27,7 +28,8 @@ public class User {
     @Column(name = "email")
     private String email;
 
-    //private Role userRole;
+    @Column(name = "user_role_id")
+    private Integer userRole;
 
     public User() {
         super();
@@ -41,14 +43,14 @@ public class User {
         this.email = email;
     }
 
-    public User(int userId, String username, String password, String firstname, String lastname, String email, Role userRole) {
+    public User(int userId, String username, String password, String firstname, String lastname, String email, Integer userRole) {
         this.userId = userId;
         this.username = username;
         this.password = password;
         this.firstname = firstname;
         this.lastname = lastname;
         this.email = email;
-        //this.userRole = userRole;
+        this.userRole = userRole;
     }
 
     public int getUserId() {
@@ -99,44 +101,44 @@ public class User {
         this.email = email;
     }
 
-//    public Role getUserRole() {
-//        return userRole;
-//    }
-//
-//    public void setUserRole(Role userRole) {
-//        this.userRole = userRole;
-//    }
+    public Integer getUserRole() {
+        return userRole;
+    }
 
-//    @Override
-//    public boolean equals(Object o) {
-//        if (this == o) return true;
-//        if (!(o instanceof User)) return false;
-//        User user = (User) o;
-//        return getUserId() == user.getUserId() &&
-//                Objects.equals(getUsername(), user.getUsername()) &&
-//                Objects.equals(getPassword(), user.getPassword()) &&
-//                Objects.equals(getFirstname(), user.getFirstname()) &&
-//                Objects.equals(getLastname(), user.getLastname()) &&
-//                Objects.equals(getEmail(), user.getEmail()) &&
-//                getUserRole() == user.getUserRole();
-//    }
-//
-//    @Override
-//    public int hashCode() {
-//        return Objects.hash(getUserId(), getUsername(), getPassword(), getFirstname(), getLastname(), getEmail(), getUserRole());
-//    }
-//
-//    @Override
-//    public String toString() {
-//        return "User{" +
-//                "userId=" + userId +
-//                ", username='" + username + '\'' +
-//                ", password='" + password + '\'' +
-//                ", firstname='" + firstname + '\'' +
-//                ", lastname='" + lastname + '\'' +
-//                ", email='" + email + '\'' +
-//                ", userRole=" + userRole +
-//                '}';
-//    }
+    public void setUserRole(Integer userRole) {
+        this.userRole = userRole;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+        User user = (User) o;
+        return getUserId() == user.getUserId() &&
+                Objects.equals(getUsername(), user.getUsername()) &&
+                Objects.equals(getPassword(), user.getPassword()) &&
+                Objects.equals(getFirstname(), user.getFirstname()) &&
+                Objects.equals(getLastname(), user.getLastname()) &&
+                Objects.equals(getEmail(), user.getEmail()) &&
+                Objects.equals(getUserRole(), user.getUserRole());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getUserId(), getUsername(), getPassword(), getFirstname(), getLastname(), getEmail(), getUserRole());
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId=" + userId +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", firstname='" + firstname + '\'' +
+                ", lastname='" + lastname + '\'' +
+                ", email='" + email + '\'' +
+                ", userRole=" + userRole +
+                '}';
+    }
 }
 

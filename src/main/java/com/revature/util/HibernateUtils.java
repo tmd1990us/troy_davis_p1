@@ -10,21 +10,28 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 
+import java.io.FileReader;
+import java.util.Properties;
+
 public class HibernateUtils {
 	
 	private static SessionFactory sessionFactory;
 
+	private static Properties props = new Properties();
+
 	public static SessionFactory getSessionFactoryProgrammaticConfig() {
+
 		if (sessionFactory != null)
 			return sessionFactory;
 		
 		try {
+			props.load(new FileReader("src/main/resources/application.properties"));
 			Configuration config = new Configuration()
 				.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect")
 				.setProperty("hibernate.connection.driver_class", "org.postgresql.Driver")
-				.setProperty("hibernate.connection.url", "jdbc:postgresql://java-ng-usf-200727.cyd04jk1n1lv.us-east-1.rds.amazonaws.com:5432/postgres")
-				.setProperty("hibernate.connection.username", "postgres")
-				.setProperty("hibernate.connection.password", "morrell01")
+				.setProperty("hibernate.connection.url", props.getProperty("url"))
+				.setProperty("hibernate.connection.username", props.getProperty("username"))
+				.setProperty("hibernate.connection.password", props.getProperty("password"))
 				.addAnnotatedClass(User.class);
 			
 				config.setImplicitNamingStrategy(ImplicitNamingStrategyJpaCompliantImpl.INSTANCE);
