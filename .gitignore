@@ -34,3 +34,6 @@ out/
 # Properties files
 *.properties
 
+*.cfg.xml
+
+*.hmb.xml

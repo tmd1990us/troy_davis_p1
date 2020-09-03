@@ -41,7 +41,7 @@ public class UserRepository {
             ps.setString(3,newUser.getFirstname());
             ps.setString(4,newUser.getLastname());
             ps.setString(5,newUser.getEmail());
-            ps.setInt(6,newUser.getUserRole().ordinal() + 1);
+            //ps.setInt(6,newUser.getUserRole().ordinal() + 1);
             //get the number of affected rows
             int rowsInserted = ps.executeUpdate();
             return rowsInserted != 0;
@@ -185,7 +185,7 @@ public class UserRepository {
             temp.setPassword(rs.getString("password"));
             temp.setFirstname(rs.getString("first_name"));
             temp.setLastname(rs.getString("last_name"));
-            temp.setUserRole(Role.getByName(rs.getString("user_role_id")));
+            //temp.setUserRole(Role.getByName(rs.getString("user_role_id")));
             users.add(temp);
         }
         return users;

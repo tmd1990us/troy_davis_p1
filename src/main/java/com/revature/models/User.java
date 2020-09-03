@@ -1,15 +1,33 @@
 package com.revature.models;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Objects;
 
+@Entity
+@Table(name = "project_1.ers_users")
 public class User {
+    @Id
+    @Column(name = "id")
     private int userId;
+
+    @Column(name = "username")
     private String username;
+
     private String password;
+
+    @Column(name = "first_name")
     private String firstname;
+
+    @Column(name = "last_name")
     private String lastname;
+
+    @Column(name = "email")
     private String email;
-    private Role userRole;
+
+    //private Role userRole;
 
     public User() {
         super();
@@ -30,7 +48,7 @@ public class User {
         this.firstname = firstname;
         this.lastname = lastname;
         this.email = email;
-        this.userRole = userRole;
+        //this.userRole = userRole;
     }
 
     public int getUserId() {
@@ -81,44 +99,44 @@ public class User {
         this.email = email;
     }
 
-    public Role getUserRole() {
-        return userRole;
-    }
+//    public Role getUserRole() {
+//        return userRole;
+//    }
+//
+//    public void setUserRole(Role userRole) {
+//        this.userRole = userRole;
+//    }
 
-    public void setUserRole(Role userRole) {
-        this.userRole = userRole;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof User)) return false;
-        User user = (User) o;
-        return getUserId() == user.getUserId() &&
-                Objects.equals(getUsername(), user.getUsername()) &&
-                Objects.equals(getPassword(), user.getPassword()) &&
-                Objects.equals(getFirstname(), user.getFirstname()) &&
-                Objects.equals(getLastname(), user.getLastname()) &&
-                Objects.equals(getEmail(), user.getEmail()) &&
-                getUserRole() == user.getUserRole();
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getUserId(), getUsername(), getPassword(), getFirstname(), getLastname(), getEmail(), getUserRole());
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "userId=" + userId +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", firstname='" + firstname + '\'' +
-                ", lastname='" + lastname + '\'' +
-                ", email='" + email + '\'' +
-                ", userRole=" + userRole +
-                '}';
-    }
+//    @Override
+//    public boolean equals(Object o) {
+//        if (this == o) return true;
+//        if (!(o instanceof User)) return false;
+//        User user = (User) o;
+//        return getUserId() == user.getUserId() &&
+//                Objects.equals(getUsername(), user.getUsername()) &&
+//                Objects.equals(getPassword(), user.getPassword()) &&
+//                Objects.equals(getFirstname(), user.getFirstname()) &&
+//                Objects.equals(getLastname(), user.getLastname()) &&
+//                Objects.equals(getEmail(), user.getEmail()) &&
+//                getUserRole() == user.getUserRole();
+//    }
+//
+//    @Override
+//    public int hashCode() {
+//        return Objects.hash(getUserId(), getUsername(), getPassword(), getFirstname(), getLastname(), getEmail(), getUserRole());
+//    }
+//
+//    @Override
+//    public String toString() {
+//        return "User{" +
+//                "userId=" + userId +
+//                ", username='" + username + '\'' +
+//                ", password='" + password + '\'' +
+//                ", firstname='" + firstname + '\'' +
+//                ", lastname='" + lastname + '\'' +
+//                ", email='" + email + '\'' +
+//                ", userRole=" + userRole +
+//                '}';
+//    }
 }
 
