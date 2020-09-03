@@ -16,7 +16,7 @@ public class RequestHelper {
                 //not modularized
                 //return "/html/home.html";
                 //modularized
-                return LoginController.login(req, userRepository);
+                return LoginController.login(req);
 
 
 //            case "/ers/api/home":
@@ -31,10 +31,17 @@ public class RequestHelper {
 
                 return EmployeeDashboardController.empDash();
 
+            case "/ers/api/adminDash":
+                System.out.println("in Admin Dash Case");
+                return AdminDashboardController.adminDash();
+
+            case "/ers/api/finManDash":
+                System.out.println("in Finance MANAGER Dash Case");
+                return FinManDashboardController.finDash();
+
             case "/ers/api/create_account":
                 System.out.println("in create account case");
-                return CreateAccountController.login(req, userRepository);
-
+                return CreateAccountController.login(req);
 
             case "/ers/api/submit_reimbursement_request":
                 System.out.println("create reimb case");

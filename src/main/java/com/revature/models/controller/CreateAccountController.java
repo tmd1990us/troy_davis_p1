@@ -13,7 +13,7 @@ public class CreateAccountController {
     //TODO: SEPARATE USER REPO INSTANTIATION
 
 
-    public static String login(HttpServletRequest req, UserRepository userRepo){
+    public static String login(HttpServletRequest req){
 
         /**
          * may implement route guarding here for your endpoints
@@ -32,10 +32,10 @@ public class CreateAccountController {
         newUser.setFirstname(req.getParameter("first_name"));
         newUser.setLastname(req.getParameter("last_name"));
         newUser.setEmail(req.getParameter("email"));
-        newUser.setUserRole(Role.EMPLOYEE);
+        newUser.setUserRole(Role.EMPLOYEE.ordinal()+1);
 
         try {
-            if(userRepo.addUser(newUser)){
+            if(new UserRepository().addUser(newUser)){
                 req.getSession().setAttribute("loggedusername", newUser.getUsername());
                 req.getSession().setAttribute("loggedpassword",newUser.getPassword());
                 return "/api/employeeDash";
