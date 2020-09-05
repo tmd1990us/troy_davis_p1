@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.util.Optional;
 
 public class LoginController {
-    public static String login(HttpServletRequest req){
+    public static String login(HttpServletRequest req, UserRepository userRepository){
 
         /**
          * may implement route guarding here for your endpoints
@@ -27,36 +27,34 @@ public class LoginController {
         String password = req.getParameter("password");
 
 
-        UserRepository userRepository = new UserRepository();
+
 
         //will need to interact with the database to validate usernames and passwords
         try {
             Optional<User> logInUser =  userRepository.getAUserByUsernameAndPassword(req.getParameter("username"),req.getParameter("password"));
 
             Integer loggedInRole = logInUser.get().getUserRole();
-            if(logInUser.isPresent()){
-                req.getSession().setAttribute("loggedusername", username);
-                req.getSession().setAttribute("loggedpassword",password);
-                req.getSession().setAttribute("loggedrole", logInUser.get().getUserRole());
-                req.getSession().setAttribute("loggeruser",logInUser);
-                System.out.println(logInUser.toString());
-                if (loggedInRole == 3){
-                    System.out.println("sending to EmployeeDash from Login Controller");
-                    return "/api/employeeDash";
-                } else if (loggedInRole == 1){
-                    System.out.println("sending to AdminDash from Login Controller");
-                    //TODO: IMPLEMENT ADMINdash
-                    return "/api/adminDash";
-                } else if (loggedInRole == 2){
-                    System.out.println("sending to FinManDash from Login Controller");
-                    //TODO: IMPLEMENT finmandash
-                    return "/api/finManDash";
-                }
-
-                System.out.println(logInUser);
-
-
+            req.getSession().setAttribute("loggedusername", username);
+            req.getSession().setAttribute("loggedpassword",password);
+            req.getSession().setAttribute("loggedrole", logInUser.get().getUserRole());
+            req.getSession().setAttribute("loggeruser",logInUser);
+            System.out.println(logInUser.toString());
+            if (loggedInRole == 3){
+                System.out.println("sending to EmployeeDash from Login Controller");
+                return "/api/employeeDash";
+            } else if (loggedInRole == 1){
+                System.out.println("sending to AdminDash from Login Controller");
+                //TODO: IMPLEMENT ADMINdash
+                return "/api/adminDash";
+            } else if (loggedInRole == 2){
+                System.out.println("sending to FinManDash from Login Controller");
+                //TODO: IMPLEMENT finmandash
+                return "/api/finManDash";
             }
+
+            System.out.println(logInUser);
+
+
         } catch (SQLException e) {
             e.printStackTrace();
         }

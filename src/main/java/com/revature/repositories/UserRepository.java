@@ -42,7 +42,7 @@ public class UserRepository {
             ps.setString(3,newUser.getFirstname());
             ps.setString(4,newUser.getLastname());
             ps.setString(5,newUser.getEmail());
-            //ps.setInt(6,newUser.getUserRole().ordinal() + 1);
+            ps.setInt(6,newUser.getUserRole());
             //get the number of affected rows
             int rowsInserted = ps.executeUpdate();
             return rowsInserted != 0;

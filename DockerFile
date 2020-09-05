@@ -1,0 +1,9 @@
+FROM openjdk:8
+FROM tomcat:7
+FROM maven
+
+COPY troy_davis_p1-1.0-SNAPSHOT.war App/
+
+WORKDIR D:/Dev/troy_davis_p1/App
+
+ENTRYPOINT [ "java","troy_davis_p1-1.0-SNAPSHOT.war" ]

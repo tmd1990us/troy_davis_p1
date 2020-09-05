@@ -1,5 +1,6 @@
 package com.revature.models.servlet;
 
+import com.revature.repositories.ReimbursementsRepository;
 import com.revature.repositories.UserRepository;
 
 import javax.servlet.ServletException;
@@ -17,6 +18,7 @@ public class ForwardingMasterServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         //req.getRequestDispatcher(("String").process(req)).forward(req,resp);
+
         req.getRequestDispatcher(RequestHelper.process(req)).forward(req,resp);
         //resp.getWriter().write("in get");
     }
@@ -24,6 +26,9 @@ public class ForwardingMasterServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         //resp.getWriter().write("in post");
+
         req.getRequestDispatcher(RequestHelper.process(req)).forward(req,resp);
     }
+
+
 }

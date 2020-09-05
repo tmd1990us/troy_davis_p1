@@ -1,6 +1,7 @@
 package com.revature.models.servlet;
 
 import com.revature.models.controller.*;
+import com.revature.repositories.ReimbursementsRepository;
 import com.revature.repositories.UserRepository;
 
 import javax.servlet.http.HttpServletRequest;
@@ -8,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 public class RequestHelper {
     public static String process(HttpServletRequest req){
         UserRepository userRepository = new UserRepository();
+        ReimbursementsRepository reimbRepo = new ReimbursementsRepository();
         System.out.println("THIS IS THE CURRENT URI ACTIVE " + req.getRequestURI());
 
         switch (req.getRequestURI()){
@@ -16,7 +18,7 @@ public class RequestHelper {
                 //not modularized
                 //return "/html/home.html";
                 //modularized
-                return LoginController.login(req);
+                return LoginController.login(req,userRepository);
 
 
 //            case "/ers/api/home":
@@ -29,15 +31,15 @@ public class RequestHelper {
             case "/ers/api/employeeDash":
                 System.out.println("in Employee Dash Case");
 
-                return EmployeeDashboardController.empDash();
+                return EmployeeDashboardController.empDash(req, reimbRepo);
 
             case "/ers/api/adminDash":
                 System.out.println("in Admin Dash Case");
-                return AdminDashboardController.adminDash();
+                return AdminDashboardController.adminDash(req, reimbRepo, userRepository);
 
             case "/ers/api/finManDash":
                 System.out.println("in Finance MANAGER Dash Case");
-                return FinManDashboardController.finDash();
+                return FinManDashboardController.finDash(req, reimbRepo);
 
             case "/ers/api/create_account":
                 System.out.println("in create account case");
@@ -49,7 +51,7 @@ public class RequestHelper {
 
 
             default:
-                System.out.println("in login case");
+                System.out.println("bad Login Case");
                 return "/html/badlogin.html";
 
 
