@@ -33,26 +33,22 @@ public class LoginController {
         try {
             Optional<User> logInUser =  userRepository.getAUserByUsernameAndPassword(req.getParameter("username"),req.getParameter("password"));
 
-            Integer loggedInRole = logInUser.get().getUserRole();
-            req.getSession().setAttribute("loggedusername", username);
-            req.getSession().setAttribute("loggedpassword",password);
-            req.getSession().setAttribute("loggedrole", logInUser.get().getUserRole());
-            req.getSession().setAttribute("loggeruser",logInUser);
-            System.out.println(logInUser.toString());
-            if (loggedInRole == 3){
-                System.out.println("sending to EmployeeDash from Login Controller");
-                return "/api/employeeDash";
-            } else if (loggedInRole == 1){
-                System.out.println("sending to AdminDash from Login Controller");
-                //TODO: IMPLEMENT ADMINdash
-                return "/api/adminDash";
-            } else if (loggedInRole == 2){
-                System.out.println("sending to FinManDash from Login Controller");
-                //TODO: IMPLEMENT finmandash
-                return "/api/finManDash";
+            if (logInUser.isPresent()){
+
+                req.getSession().setAttribute("loggedusername", username);
+                req.getSession().setAttribute("loggedpassword",password);
+                req.getSession().setAttribute("loggedrole", logInUser.get().getUserRole());
+
+                req.getSession().setAttribute("id",logInUser.get().getUserId());
+
+                System.out.println("Logged In User id parameter is: " + logInUser.get().getUserId());
+
+                System.out.println(logInUser.toString());
+
+                System.out.println("sending to home from log in screen");
+                return "/api/home";
             }
 
-            System.out.println(logInUser);
 
 
         } catch (SQLException e) {

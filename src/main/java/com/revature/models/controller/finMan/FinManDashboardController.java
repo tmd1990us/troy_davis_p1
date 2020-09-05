@@ -1,4 +1,4 @@
-package com.revature.models.controller;
+package com.revature.models.controller.finMan;
 
 import com.revature.repositories.ReimbursementsRepository;
 

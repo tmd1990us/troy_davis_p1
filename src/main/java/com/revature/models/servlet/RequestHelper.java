@@ -1,6 +1,11 @@
 package com.revature.models.servlet;
 
 import com.revature.models.controller.*;
+import com.revature.models.controller.admin.AdminDashboardController;
+import com.revature.models.controller.employee.EmployeeDashboardController;
+import com.revature.models.controller.employee.SubmitEmployeeReimbursementController;
+import com.revature.models.controller.employee.ViewEmployeeRiembursementController;
+import com.revature.models.controller.finMan.FinManDashboardController;
 import com.revature.repositories.ReimbursementsRepository;
 import com.revature.repositories.UserRepository;
 
@@ -21,12 +26,12 @@ public class RequestHelper {
                 return LoginController.login(req,userRepository);
 
 
-//            case "/ers/api/home":
-//                System.out.println("in home case");
-//                //not modularized
-//                //return "/html/login.html";
-//                //modularized
-//                return HomeController.home(req);
+            case "/ers/api/home":
+                System.out.println("in home case");
+                //not modularized
+                //return "/html/login.html";
+                //modularized
+                return HomeController.home(req);
 
             case "/ers/api/employeeDash":
                 System.out.println("in Employee Dash Case");
@@ -47,8 +52,11 @@ public class RequestHelper {
 
             case "/ers/api/submit_reimbursement_request":
                 System.out.println("create reimb case");
-                return SubmitReimbursementController.home(req);
+                return SubmitEmployeeReimbursementController.home(req, reimbRepo);
 
+            case "/ers/api/view_employee_reimbursements":
+                System.out.println("view reimb case");
+                return ViewEmployeeRiembursementController.home(req, reimbRepo);
 
             default:
                 System.out.println("bad Login Case");

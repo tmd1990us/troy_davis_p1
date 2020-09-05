@@ -13,7 +13,7 @@
         <h3>Submit A Reimbursement Request</h3>
     </div>
 </br>
-    <form method="post" action="/ers/api/submit_reimbursement">
+    <form method="POST" action="/ers/api/submit_reimbursement_request">
         <p>Please Enter Reimbursement Details</p>
     </br>
         <label for="amount">Example Amount</label>
@@ -21,10 +21,10 @@
     </br>
         <label for="description">Enter Details</label>
         <textarea class="form-control" id="description" rows="3" 
-            placeholder="Description of Reimbursement"></textarea>
+            placeholder="Description of Reimbursement" name="description"></textarea>
     </br>
         <label for="type">Select Type</label>
-        <select class="form-control" id="type">
+        <select class="form-control" id="type" name="type">
         <option>Lodging</option>
         <option>Travel</option>
         <option>Food</option>

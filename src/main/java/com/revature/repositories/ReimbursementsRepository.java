@@ -18,7 +18,7 @@ import java.util.Set;
  */
 public class ReimbursementsRepository {
     private String baseQuery = "SELECT * FROM project_1.ers_reimbursements er ";
-    private String baseInsert = "INSERT INTO project_1.ers_reimbursements er ";
+    private String baseInsert = "INSERT INTO project_1.ers_reimbursements ";
     private String baseUpdate = "UPDATE project_1.ers_reimbursements er ";
 
     public ReimbursementsRepository(){

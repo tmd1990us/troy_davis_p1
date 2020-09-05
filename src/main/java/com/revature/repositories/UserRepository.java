@@ -130,6 +130,7 @@ public class UserRepository {
             ResultSet rs = psmt.executeQuery();
             user = mapResultSet(rs).stream().findFirst();
         }
+        System.out.println(user);
         return user;
     }
 
@@ -212,7 +213,7 @@ public class UserRepository {
             temp.setPassword(rs.getString("password"));
             temp.setFirstname(rs.getString("first_name"));
             temp.setLastname(rs.getString("last_name"));
-            //temp.setUserRole(Role.getByName(rs.getString("user_role_id")));
+            temp.setUserRole(rs.getInt("user_role_id"));
             users.add(temp);
         }
         return users;
