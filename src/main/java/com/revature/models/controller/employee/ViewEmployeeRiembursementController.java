@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.models.Reimbursement;
 import com.revature.repositories.ReimbursementsRepository;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -19,9 +20,9 @@ public class ViewEmployeeRiembursementController {
             Set<Reimbursement> reimbs  = reimbRepo.getAllReimbSetByAuthorId((Integer) req.getSession().getAttribute("id"));
             req.setAttribute("requests",reimbs);
 
-            for (Reimbursement r : reimbs){
-                System.out.println(r);
-            }
+//            req.getRequestDispatcher("/html/employee/ver.jsp").forward(req, resp);
+
+//            return "html/employee/ver.jsp";
 
         } catch (SQLException | IOException e) {
             e.printStackTrace();
