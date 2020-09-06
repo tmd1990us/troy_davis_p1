@@ -1,8 +1,8 @@
 FROM openjdk:8
-FROM tomcat:7
 
-COPY troy_davis_p1-1.0-SNAPSHOT.war App/
 
-WORKDIR D:/Dev/troy_davis_p1/App
+COPY target/troy_davis_p1-1.0-SNAPSHOT.war App/
 
-ENTRYPOINT [ "war","troy_davis_p1-1.0-SNAPSHOT.war" ]
+WORKDIR App/
+
+ENTRYPOINT [ "java", "-war","troy_davis_p1-1.0-SNAPSHOT.war" ]

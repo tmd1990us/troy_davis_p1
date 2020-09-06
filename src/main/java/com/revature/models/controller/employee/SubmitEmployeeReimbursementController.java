@@ -5,11 +5,12 @@ import com.revature.models.ReimbursementType;
 import com.revature.repositories.ReimbursementsRepository;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 
 public class SubmitEmployeeReimbursementController {
-    public static String home (HttpServletRequest req, ReimbursementsRepository reimbRepo){
+    public static String home(HttpServletRequest req, HttpServletResponse resp, ReimbursementsRepository reimbRepo){
 
         if(!req.getMethod().equals("POST")){
             return "/html/employee/submit_reimbursement_request.html";

@@ -1,6 +1,8 @@
 package com.revature.models.servlet;
 
-import com.revature.models.controller.*;
+import com.revature.models.controller.CreateAccountController;
+import com.revature.models.controller.HomeController;
+import com.revature.models.controller.LoginController;
 import com.revature.models.controller.admin.AdminDashboardController;
 import com.revature.models.controller.employee.EmployeeDashboardController;
 import com.revature.models.controller.employee.SubmitEmployeeReimbursementController;
@@ -12,7 +14,7 @@ import com.revature.repositories.UserRepository;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class RequestHelper {
+public class EmployeeRequestHelper {
     public static String process(HttpServletRequest req, HttpServletResponse resp){
         UserRepository userRepository = new UserRepository();
         ReimbursementsRepository reimbRepo = new ReimbursementsRepository();
@@ -57,7 +59,6 @@ public class RequestHelper {
 
             case "/ers/api/view_employee_reimbursements":
                 System.out.println("view reimb case");
-
                 return ViewEmployeeRiembursementController.home(req, resp, reimbRepo);
 
             default:
