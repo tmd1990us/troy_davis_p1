@@ -62,14 +62,13 @@ public class RequestHelper {
             case "/ers/api/view_employee_reimbursements":
                 System.out.println("view reimb case");
 
-
                 try {
                     req.getRequestDispatcher("/epi/view_employee_reimbursements").forward(req, resp);
                 } catch (ServletException | IOException e) {
                     e.printStackTrace();
                 }
 
-                return ViewEmployeeRiembursementController.home(req, resp, reimbRepo);
+                return "/html/badrequest.html";
 
             default:
                 System.out.println("bad Login Case");

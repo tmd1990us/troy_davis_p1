@@ -15,11 +15,12 @@ public class SubmitEmployeeReimbursementController {
         if(!req.getMethod().equals("POST")){
             return "/html/employee/submit_reimbursement_request.html";
         }
-        
-        Reimbursement temp = new Reimbursement();
 
+
+        Reimbursement temp = new Reimbursement();
         int tempId = (int) req.getSession().getAttribute("id");
         temp.setAuthorId(tempId);
+
         temp.setAmount(Double.valueOf(req.getParameter("amount")));
         temp.setDescription(req.getParameter("description"));
         temp.setReimbursementType(ReimbursementType.getByName(req.getParameter("type")));

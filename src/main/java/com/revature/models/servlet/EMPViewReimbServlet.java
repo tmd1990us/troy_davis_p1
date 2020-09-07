@@ -1,6 +1,8 @@
 package com.revature.models.servlet;
 
 import com.revature.models.Reimbursement;
+import com.revature.models.ReimbursementStatus;
+import com.revature.models.ReimbursementType;
 import com.revature.repositories.ReimbursementsRepository;
 import com.revature.repositories.UserRepository;
 
@@ -20,9 +22,12 @@ public class EMPViewReimbServlet extends HttpServlet {
     UserRepository userRepository = new UserRepository();
     ReimbursementsRepository reimbRepo = new ReimbursementsRepository();
 
+
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         //req.getRequestDispatcher(("String").process(req)).forward(req,resp);
+
 
         try {
             PrintWriter out = resp.getWriter();
@@ -36,14 +41,33 @@ public class EMPViewReimbServlet extends HttpServlet {
             e.printStackTrace();
         }
 
+
+
+
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         //resp.getWriter().write("in post");
 
+        int id = Integer.parseInt(req.getParameter("username"));
+
 
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     private static String mapReimbToHTMLTable(Set<Reimbursement> reimb){
@@ -66,6 +90,7 @@ public class EMPViewReimbServlet extends HttpServlet {
                 "    </br>\n" +
                 "    <table id=\"view_reimbursements_table\" class=\"table\"  >\n" +
                 "        <tr>\n" +
+                "            <th>Update</th>\n" +
                 "            <th>ID</th>\n" +
                 "            <th>Amount</th>\n" +
                 "            <th>Submitted </th>\n" +
@@ -73,19 +98,28 @@ public class EMPViewReimbServlet extends HttpServlet {
                 "            <th>Type</th>\n" +
                 "            <th>Resolver ID</th>\n" +
                 "            <th>Status</th>\n" +
-                "            <th>Update</th>\n" +
+
                 "            <!-- Take them back to submit Reim. with details from the selected reimb.  -->\n" +
                 "        </tr>";
 
 
         String htmlFoot = "\n" +
                 "    </table>\n" +
+                "    <input type=\"submit\" value=\"View Detail\"/><br>" +
                 "    \n" +
+
+
+
                 "<!-- JS, Popper.js, and jQuery -->\n" +
                 "<script src=\"https://code.jquery.com/jquery-3.5.1.slim.min.js\" integrity=\"sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj\" crossorigin=\"anonymous\"></script>\n" +
                 "<script src=\"https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js\" integrity=\"sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN\" crossorigin=\"anonymous\"></script>\n" +
                 "<script src=\"https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js\" integrity=\"sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV\" crossorigin=\"anonymous\"></script>\n" +
+
+                "<script>  $(\".pending tr\").click(function(){\n" +
+                "   window.location = \"www.google.com\";\n" +
+                " });</script>" +
                 "\n" +
+
                 "</body>\n" +
                 "</html>";
 
@@ -94,19 +128,29 @@ public class EMPViewReimbServlet extends HttpServlet {
         String returnString = "";
         returnString = returnString.concat(htmlHead);
 
+
+
         for (Reimbursement r : reimb){
-            String tr = "<tr>\n" +
-                    "            <th>"+ r.getId() + "</th>\n" +
-                    "            <th>"+ r.getAmount() +"</th>\n" +
-                    "            <th>"+ r.getSubmitted() + "</th>\n" +
-                    "            <th>"+ r.getDescription() +"</th>\n" +
-                    "            <th>"+ r.getReimbursementType() +"</th>\n" +
-                    "            <th>"+ r.getResolverId() +"</th>\n" +
-                    "            <th>"+ r.getReimbursementStatus() +"</th>\n" +
-                    "            <th>"+ r.getResolved() +"</th>\n" +
-                    "            <!-- Take them back to submit Reim. with details from the selected reimb.  -->\n" +
-                    "        </tr>";
+            String tr = "";
+            tr = tr.concat( "<tr ");
+            if (r.getReimbursementStatus().equals(ReimbursementStatus.PENDING)){
+                tr = tr.concat( " class=\"pending\"");
+            }
+            tr = tr.concat( ">\n");
+
+            tr = tr.concat(   "            <td><input type=\"checkbox\" id=\"updateCheckBox\" name=\"updateCheckBox\" value=\"Update\"></td>" +
+                                    //set NAME TO THE RECORDS id
+                    "            <td name=\"reimb_id\">"+ r.getId() + "</td>\n" +
+                    "            <td name=\"reimb_amount\">"+ r.getAmount() +"</td>\n" +
+                    "            <td>"+ r.getSubmitted() + "</td>\n" +
+                    "            <td name=\"reimb_description\">"+ r.getDescription() +"</td>\n" +
+                    "            <td name=\"reimb_type\">"+ r.getReimbursementType() +"</td>\n" +
+                    "            <td>"+ r.getResolverId() +"</td>\n" +
+                    "            <td>"+ r.getReimbursementStatus() +"</td>\n" +
+                    "        </tr>");
             returnString = returnString.concat(tr);
+
+
         }
 
 
