@@ -15,21 +15,12 @@ import java.util.Set;
 
 public class ViewEmployeeRiembursementController {
     public static String home(HttpServletRequest req, HttpServletResponse resp, ReimbursementsRepository reimbRepo) {
-        try {
-            PrintWriter out = resp.getWriter();
-            Set<Reimbursement> reimbs  = reimbRepo.getAllReimbSetByAuthorId((Integer) req.getSession().getAttribute("id"));
-            req.setAttribute("requests",reimbs);
 
-//            req.getRequestDispatcher("/html/employee/ver.jsp").forward(req, resp);
-
-//            return "html/employee/ver.jsp";
-
-        } catch (SQLException | IOException e) {
-            e.printStackTrace();
-        }
 
 
 
         return "/html/employee/view_employee_reimbursements.html";
     }
+
 }
+

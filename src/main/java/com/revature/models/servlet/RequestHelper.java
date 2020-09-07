@@ -9,14 +9,18 @@ import com.revature.models.controller.finMan.FinManDashboardController;
 import com.revature.repositories.ReimbursementsRepository;
 import com.revature.repositories.UserRepository;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 public class RequestHelper {
     public static String process(HttpServletRequest req, HttpServletResponse resp){
         UserRepository userRepository = new UserRepository();
         ReimbursementsRepository reimbRepo = new ReimbursementsRepository();
-        System.out.println("THIS IS THE CURRENT URI ACTIVE " + req.getRequestURI());
+        System.out.println("THIS IS THE CURRENT URI ACTIVE: " + req.getRequestURI());
+        System.out.println("THIS IS THE CURRENT METHOD: "+req.getMethod());
 
         switch (req.getRequestURI()){
             case "/ers/api/login":
@@ -49,7 +53,7 @@ public class RequestHelper {
 
             case "/ers/api/create_account":
                 System.out.println("in create account case");
-                return CreateAccountController.login(req);
+                return CreateAccountController.login(req,userRepository);
 
             case "/ers/api/submit_reimbursement_request":
                 System.out.println("create reimb case");
@@ -57,6 +61,13 @@ public class RequestHelper {
 
             case "/ers/api/view_employee_reimbursements":
                 System.out.println("view reimb case");
+
+
+                try {
+                    req.getRequestDispatcher("/epi/view_employee_reimbursements").forward(req, resp);
+                } catch (ServletException | IOException e) {
+                    e.printStackTrace();
+                }
 
                 return ViewEmployeeRiembursementController.home(req, resp, reimbRepo);
 

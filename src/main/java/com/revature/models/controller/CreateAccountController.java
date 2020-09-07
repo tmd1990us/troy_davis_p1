@@ -13,7 +13,7 @@ public class CreateAccountController {
     //TODO: SEPARATE USER REPO INSTANTIATION
 
 
-    public static String login(HttpServletRequest req){
+    public static String login(HttpServletRequest req, UserRepository userRepo){
 
         /**
          * may implement route guarding here for your endpoints
@@ -32,32 +32,18 @@ public class CreateAccountController {
         newUser.setFirstname(req.getParameter("first_name"));
         newUser.setLastname(req.getParameter("last_name"));
         newUser.setEmail(req.getParameter("email"));
-        newUser.setUserRole(Role.EMPLOYEE.ordinal()+1);
+        //new Users are Employees by default
+        newUser.setUserRole(3);
 
         try {
-            if(new UserRepository().addUser(newUser)){
+            if(userRepo.addUser(newUser)){
                 req.getSession().setAttribute("loggedusername", newUser.getUsername());
                 req.getSession().setAttribute("loggedpassword",newUser.getPassword());
                 return "/api/employeeDash";
-            }else {
-                return "/api/wrongcreds";
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-
-        //will need to interact with the database to validate usernames and passwords
-//        if(!(username.equals("cheese") && password.equals("louise"))){
-//            return "/api/wrongcreds";
-//        }else{
-//            /**
-//             * in our project, we may need to store an entire object role, likes, comments, etc
-//             */
-//            req.getSession().setAttribute("loggedusername", username);
-//            req.getSession().setAttribute("loggedpassword",password);
-//            return "/api/home";
-//        }
 
         return "/api/home";
     }
