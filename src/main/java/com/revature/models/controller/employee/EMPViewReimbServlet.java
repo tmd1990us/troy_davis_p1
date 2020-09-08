@@ -1,4 +1,4 @@
-package com.revature.models.servlet;
+package com.revature.models.controller.employee;
 
 import com.revature.models.Reimbursement;
 import com.revature.models.ReimbursementStatus;
@@ -16,7 +16,7 @@ import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.Set;
 
-@WebServlet("/epi/view_employee_reimbursements")
+@WebServlet("/api/view_employee_reimbursements")
 public class EMPViewReimbServlet extends HttpServlet {
 
     UserRepository userRepository = new UserRepository();
@@ -29,10 +29,13 @@ public class EMPViewReimbServlet extends HttpServlet {
         //req.getRequestDispatcher(("String").process(req)).forward(req,resp);
 
 
+
         try {
+            resp.setContentType("text/html");
             PrintWriter out = resp.getWriter();
             Set<Reimbursement> reimbs  = reimbRepo.getAllReimbSetByAuthorId((Integer) req.getSession().getAttribute("id"));
             //req.setAttribute("requests",reimbs);
+
 
             out.write(mapReimbToHTMLTable(reimbs));
 
@@ -70,7 +73,7 @@ public class EMPViewReimbServlet extends HttpServlet {
 
 
 
-    private static String mapReimbToHTMLTable(Set<Reimbursement> reimb){
+    public static String mapReimbToHTMLTable(Set<Reimbursement> reimb){
 
         String htmlHead = "<!DOCTYPE html>\n" +
                 "<html lang=\"en\">\n" +
@@ -105,7 +108,6 @@ public class EMPViewReimbServlet extends HttpServlet {
 
         String htmlFoot = "\n" +
                 "    </table>\n" +
-                "    <input type=\"submit\" value=\"View Detail\"/><br>" +
                 "    \n" +
 
 
@@ -114,10 +116,17 @@ public class EMPViewReimbServlet extends HttpServlet {
                 "<script src=\"https://code.jquery.com/jquery-3.5.1.slim.min.js\" integrity=\"sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj\" crossorigin=\"anonymous\"></script>\n" +
                 "<script src=\"https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js\" integrity=\"sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN\" crossorigin=\"anonymous\"></script>\n" +
                 "<script src=\"https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js\" integrity=\"sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV\" crossorigin=\"anonymous\"></script>\n" +
-
-                "<script>  $(\".pending tr\").click(function(){\n" +
-                "   window.location = \"www.google.com\";\n" +
-                " });</script>" +
+                "<script>" +
+                "$(document).ready(function() {\n" +
+                "\n" +
+                "    $('#view_reimbursements_table tr').click(function() {\n" +
+                "        var href = $(this).find(\"a\").attr(\"href\");\n" +
+                "        if(href) {\n" +
+                "            window.location = href;\n" +
+                "        }\n" +
+                "    });\n" +
+                "\n" +
+                "});</script>" +
                 "\n" +
 
                 "</body>\n" +
@@ -132,15 +141,14 @@ public class EMPViewReimbServlet extends HttpServlet {
 
         for (Reimbursement r : reimb){
             String tr = "";
-            tr = tr.concat( "<tr ");
+            tr = tr.concat( "<tr> ");
+            tr = tr.concat( "<td> ");
             if (r.getReimbursementStatus().equals(ReimbursementStatus.PENDING)){
-                tr = tr.concat( " class=\"pending\"");
+                tr = tr.concat( " <a href=\"/ers/api/update_employee_reimbursements>Edit</a>");
             }
-            tr = tr.concat( ">\n");
+            tr = tr.concat( "</td>\n");
 
-            tr = tr.concat(   "            <td><input type=\"checkbox\" id=\"updateCheckBox\" name=\"updateCheckBox\" value=\"Update\"></td>" +
-                                    //set NAME TO THE RECORDS id
-                    "            <td name=\"reimb_id\">"+ r.getId() + "</td>\n" +
+            tr = tr.concat(   "<td name=\"reimb_id\">"+ r.getId() + "</td>\n" +
                     "            <td name=\"reimb_amount\">"+ r.getAmount() +"</td>\n" +
                     "            <td>"+ r.getSubmitted() + "</td>\n" +
                     "            <td name=\"reimb_description\">"+ r.getDescription() +"</td>\n" +

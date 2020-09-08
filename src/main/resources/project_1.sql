@@ -101,7 +101,7 @@ REFERENCES project_1.ers_users(id);
 
 INSERT INTO project_1.ers_users
 (username, password, first_name, last_name, email, user_role_id)
-VALUES('tmd1999', crypt('password', gen_salt('bf', 10)), 'troy', 'davis', 'tmd1999@t.co', 1);
+VALUES('u5', crypt('password', gen_salt('bf', 10)), 'troy', 'davis', 'u5', 2);
 
 select * from project_1.ers_users eu 
 where password = project_1.crypt('password', password);
@@ -114,3 +114,7 @@ select * from ers_users eu ;
 
 --needed to be able to hash and unhash the passwords
 CREATE EXTENSION pgcrypto;
+
+SELECT id, amount, submitted, resolved, description, reciept, author_id, resolver_id, reimbursement_status_id, reimbursement_type_id
+FROM project_1.ers_reimbursements;
+

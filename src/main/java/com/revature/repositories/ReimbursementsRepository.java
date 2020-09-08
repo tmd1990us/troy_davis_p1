@@ -53,6 +53,31 @@ public class ReimbursementsRepository {
 
     //---------------------------------- READ -------------------------------------------- //
 
+    public Set<Reimbursement> getAllReimbursements() throws SQLException {
+        Set<Reimbursement> reimbursements = new HashSet<>();
+        try(Connection conn = ConnectionFactory.getInstance().getConnection()) {
+            String sql = baseQuery;
+            PreparedStatement ps = conn.prepareStatement(sql);
+
+            ResultSet rs = ps.executeQuery();
+
+            reimbursements = mapResultSet(rs);
+        }
+        return reimbursements;
+    }
+
+    public Set<Reimbursement> getAllReimbSetByStatus(ReimbursementStatus reStat) throws SQLException {
+        Set<Reimbursement> reimbursements = new HashSet<>();
+        try(Connection conn = ConnectionFactory.getInstance().getConnection()) {
+            String sql = baseQuery + "WHERE er.reimbursement_status_id=? ";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1,reStat.ordinal() + 1);
+            ResultSet rs = ps.executeQuery();
+            reimbursements = mapResultSet(rs);
+        }
+        return reimbursements;
+    }
+
     /**
      * A method to get Reimbursements by the id of the reimbursement itself
      * @param reimbId The ID of the reimbursement in the database that is requested

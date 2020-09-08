@@ -6,6 +6,8 @@ import com.revature.models.controller.employee.EmployeeDashboardController;
 import com.revature.models.controller.employee.SubmitEmployeeReimbursementController;
 import com.revature.models.controller.employee.ViewEmployeeRiembursementController;
 import com.revature.models.controller.finMan.FinManDashboardController;
+import com.revature.models.controller.finMan.FinManViewAllJSON;
+import com.revature.models.controller.finMan.FinManViewAllReimbRequest;
 import com.revature.repositories.ReimbursementsRepository;
 import com.revature.repositories.UserRepository;
 
@@ -51,6 +53,14 @@ public class RequestHelper {
                 System.out.println("in Finance MANAGER Dash Case");
                 return FinManDashboardController.finDash(req, reimbRepo);
 
+            case "/ers/api/view_all_reimbursements":
+                System.out.println("in view All Reimbursements Case");
+                return FinManViewAllReimbRequest.viewAll(req, resp, reimbRepo);
+
+            case "/ers/api/view_all_reimbursements_by_status":
+                System.out.println("in view All Reimbursements Case");
+                return FinManViewAllReimbRequest.viewAllByStatus(req, resp, reimbRepo);
+
             case "/ers/api/create_account":
                 System.out.println("in create account case");
                 return CreateAccountController.login(req,userRepository);
@@ -59,16 +69,18 @@ public class RequestHelper {
                 System.out.println("create reimb case");
                 return SubmitEmployeeReimbursementController.home(req,resp, reimbRepo);
 
-            case "/ers/api/view_employee_reimbursements":
-                System.out.println("view reimb case");
-
-                try {
-                    req.getRequestDispatcher("/epi/view_employee_reimbursements").forward(req, resp);
-                } catch (ServletException | IOException e) {
-                    e.printStackTrace();
-                }
-
-                return "/html/badrequest.html";
+//            case "/ers/api/view_employee_reimbursements":
+//                System.out.println("view reimb case");
+//
+//                try {
+//                    resp.sendRedirect("/epi/view_employee_reimbursements");
+////                    req.getRequestDispatcher("/epi/view_employee_reimbursements").forward(req, resp);
+//
+//                } catch ( IOException e) {
+//                    e.printStackTrace();
+//                }
+//
+//                return "/html/badrequest.html";
 
             default:
                 System.out.println("bad Login Case");
