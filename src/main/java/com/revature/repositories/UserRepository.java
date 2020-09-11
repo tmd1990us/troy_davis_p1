@@ -8,10 +8,7 @@ import com.revature.util.HibernateUtils;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.*;
 
 public class UserRepository {
@@ -31,7 +28,7 @@ public class UserRepository {
      * @return returns true if one and only one row was inserted
      * @throws SQLException e
      */
-    public boolean addUser(User newUser) throws SQLException {
+    public boolean addUser(User newUser)  {
         try(Connection conn = ConnectionFactory.getInstance().getConnection()) {
             String sql = baseInsert +
                          "(username, password, first_name, last_name, email, user_role_id)\n" +
@@ -46,32 +43,27 @@ public class UserRepository {
             //get the number of affected rows
             int rowsInserted = ps.executeUpdate();
             return rowsInserted != 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+        return false;
     }
 
     //---------------------------------- READ -------------------------------------------- //
 
-    public List<User> getAllusers() throws SQLException{
-        Session session =
-                //HibernateUtils.getSessionFactoryFileConfig().openSession();
-                HibernateUtils.getSessionFactoryProgrammaticConfig().openSession();
-        Transaction tx = null;
-        List<User> users = new ArrayList<>();
-        try {
-            tx = session.beginTransaction();
+    public Set<User> getAllusers() {
+        Set<User> users = new HashSet<>();
 
-            users = session.createQuery("FROM User", User.class).list();
-            for (User u : users) {
-                System.out.println("Entry: " + u.getFirstname() + " " +
-                        u.getLastname() + ", " + u.getUsername() + ", " + u.getEmail());
-            }
-            tx.commit();
-        }
-        catch (Exception e) {
-            if (tx!=null) tx.rollback();
+        try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
+
+            String sql = baseQuery;
+
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            users = mapResultSet(rs);
+
+        } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            session.close();
         }
         return users;
     }
@@ -83,7 +75,7 @@ public class UserRepository {
      * @return returns an optional user
      * @throws SQLException e
      */
-    public Optional<User> getAUserById(Integer userId) throws SQLException {
+    public Optional<User> getAUserById(Integer userId) {
         Optional<User> user = Optional.empty();
         try (Connection conn = ConnectionFactory.getInstance().getConnection()){
             String sql = baseQuery + "WHERE eu.id=? ";
@@ -91,6 +83,8 @@ public class UserRepository {
             psmt.setInt(1,userId);
             ResultSet rs = psmt.executeQuery();
             user = mapResultSet(rs).stream().findFirst();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return user;
     }
@@ -101,7 +95,7 @@ public class UserRepository {
      * @return returns an Optional user
      * @throws SQLException e
      */
-    public Optional<User> getAUserByEmail(String email) throws SQLException {
+    public Optional<User> getAUserByEmail(String email) {
         Optional<User> user = Optional.empty();
         try (Connection conn = ConnectionFactory.getInstance().getConnection()){
             String sql = baseQuery + "WHERE eu.id=? ";
@@ -109,7 +103,24 @@ public class UserRepository {
             psmt.setString(1,email);
             ResultSet rs = psmt.executeQuery();
             user = mapResultSet(rs).stream().findFirst();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+        return user;
+    }
+
+    public Optional<User> getAUserByUsername(String userName) {
+        Optional<User> user = Optional.empty();
+        try (Connection conn = ConnectionFactory.getInstance().getConnection()){
+            String sql = baseQuery + "WHERE username = ?";
+            PreparedStatement psmt = conn.prepareStatement(sql);
+            psmt.setString(1,userName);
+            ResultSet rs = psmt.executeQuery();
+            user = mapResultSet(rs).stream().findFirst();
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
+        System.out.println(user);
         return user;
     }
 
@@ -120,7 +131,7 @@ public class UserRepository {
      * @return returns an optional user
      * @throws SQLException e
      */
-    public Optional<User> getAUserByUsernameAndPassword(String userName, String password) throws SQLException {
+    public Optional<User> getAUserByUsernameAndPassword(String userName, String password) {
         Optional<User> user = Optional.empty();
         try (Connection conn = ConnectionFactory.getInstance().getConnection()){
             String sql = baseQuery + "WHERE username = ? AND  password = project_1.crypt(?, password)";
@@ -129,6 +140,8 @@ public class UserRepository {
             psmt.setString(2,password);
             ResultSet rs = psmt.executeQuery();
             user = mapResultSet(rs).stream().findFirst();
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
         }
         System.out.println(user);
         return user;
@@ -140,7 +153,7 @@ public class UserRepository {
      * @return returns a set of users
      * @throws SQLException e
      */
-    public Set<User> getAllUsersByRole(Role role) throws SQLException {
+    public Set<User> getAllUsersByRole(Role role) {
         Set<User> user = new HashSet<>();
         try (Connection conn = ConnectionFactory.getInstance().getConnection()){
             String sql = baseQuery + "WHERE eu.user_role_id=? ";
@@ -148,6 +161,8 @@ public class UserRepository {
             psmt.setInt(1,role.ordinal() + 1);
             ResultSet rs = psmt.executeQuery();
             user = mapResultSet(rs);
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return user;
     }
@@ -182,7 +197,7 @@ public class UserRepository {
      * @return returns true if one and only one record is updated
      * @throws SQLException
      */
-    public boolean deleteAUserById(Integer userId) throws SQLException {
+    public boolean deleteAUserById(Integer userId) {
         try(Connection conn = ConnectionFactory.getInstance().getConnection()) {
             String sql = "DELETE FROM project_1.ers_users\n" +
                          "WHERE id=? ";
@@ -191,7 +206,10 @@ public class UserRepository {
             //get the number of affected rows
             int rowsInserted = ps.executeUpdate();
             return rowsInserted != 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+        return false;
     }
 
 

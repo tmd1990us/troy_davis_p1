@@ -1,6 +1,6 @@
-package com.revature.models.servlet;
+package com.revature.servlet;
 
-import com.revature.models.controller.finMan.FinManViewAllJSON;
+import com.revature.controller.finMan.FinManViewAllJSON;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;

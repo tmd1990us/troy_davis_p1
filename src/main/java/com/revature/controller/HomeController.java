@@ -1,4 +1,4 @@
-package com.revature.models.controller;
+package com.revature.controller;
 
 import javax.servlet.http.HttpServletRequest;
 

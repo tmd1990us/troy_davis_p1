@@ -1,4 +1,4 @@
-package com.revature.models.controller.admin;
+package com.revature.controller.admin;
 
 import com.revature.repositories.ReimbursementsRepository;
 import com.revature.repositories.UserRepository;

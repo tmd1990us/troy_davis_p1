@@ -1,12 +1,9 @@
-package com.revature.models.controller;
+package com.revature.controller;
 
-import com.revature.models.Role;
 import com.revature.models.User;
 import com.revature.repositories.UserRepository;
-import com.revature.util.ConnectionFactory;
 
 import javax.servlet.http.HttpServletRequest;
-import java.sql.Connection;
 import java.sql.SQLException;
 
 public class CreateAccountController {
@@ -41,7 +38,7 @@ public class CreateAccountController {
                 req.getSession().setAttribute("loggedpassword",newUser.getPassword());
                 return "/api/employeeDash";
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

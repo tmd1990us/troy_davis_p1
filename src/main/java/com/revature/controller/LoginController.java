@@ -1,6 +1,5 @@
-package com.revature.models.controller;
+package com.revature.controller;
 
-import com.revature.models.Role;
 import com.revature.models.User;
 import com.revature.repositories.UserRepository;
 
@@ -51,7 +50,7 @@ public class LoginController {
 
 
 
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return "/api/wrongcreds";

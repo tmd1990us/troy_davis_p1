@@ -1,21 +1,16 @@
-package com.revature.models.servlet;
+package com.revature.servlet;
 
-import com.revature.models.controller.*;
-import com.revature.models.controller.admin.AdminDashboardController;
-import com.revature.models.controller.employee.EmployeeDashboardController;
-import com.revature.models.controller.employee.SubmitEmployeeReimbursementController;
-import com.revature.models.controller.employee.ViewEmployeeRiembursementController;
-import com.revature.models.controller.finMan.FinManDashboardController;
-import com.revature.models.controller.finMan.FinManViewAllJSON;
-import com.revature.models.controller.finMan.FinManViewAllReimbRequest;
+import com.revature.controller.*;
+import com.revature.controller.admin.AdminDashboardController;
+import com.revature.controller.employee.EmployeeDashboardController;
+import com.revature.controller.employee.SubmitEmployeeReimbursementController;
+import com.revature.controller.finMan.FinManDashboardController;
+import com.revature.controller.finMan.FinManViewAllReimbRequest;
 import com.revature.repositories.ReimbursementsRepository;
 import com.revature.repositories.UserRepository;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
 
 public class RequestHelper {
     public static String process(HttpServletRequest req, HttpServletResponse resp){

@@ -1,8 +1,7 @@
-package com.revature.models.controller.employee;
+package com.revature.controller.employee;
 
 import com.revature.models.Reimbursement;
 import com.revature.models.ReimbursementStatus;
-import com.revature.models.ReimbursementType;
 import com.revature.repositories.ReimbursementsRepository;
 import com.revature.repositories.UserRepository;
 

@@ -1,7 +1,6 @@
-package com.revature.models.controller.employee;
+package com.revature.controller.employee;
 
 import com.revature.models.Reimbursement;
-import com.revature.models.ReimbursementStatus;
 import com.revature.repositories.ReimbursementsRepository;
 import com.revature.repositories.UserRepository;
 
@@ -13,8 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Set;
 
