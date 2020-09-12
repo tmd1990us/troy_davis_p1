@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import com.revature.dtos.Credentials;
 import com.revature.dtos.ErrorResponse;
+import com.revature.dtos.Principal;
 import com.revature.exceptions.AuthenticationException;
 import com.revature.exceptions.InvalidRequestException;
 import com.revature.models.User;
@@ -32,24 +33,27 @@ public class AuthServlet extends HttpServlet {
             Credentials creds = mapper.readValue(req.getInputStream(),Credentials.class);
             User authUser = userService.authenticate(creds.getUsername(),creds.getPassword());
             HttpSession session = req.getSession();
-            session.setAttribute("auth-user",authUser);
-            session.setAttribute("user-role",authUser.getUserRole());
-            resp.setStatus(204);
-        } catch (MismatchedInputException | InvalidRequestException upe) {
-            upe.printStackTrace();
+            Principal principal = new Principal(authUser);
+            session.setAttribute("principal", principal.stringify());
+            session.setAttribute("loggedinrole",authUser.getUserRole());
+            session.setAttribute("userId",authUser.getUserId());
+            String principalJSON = mapper.writeValueAsString(principal);
+            respWriter.write(principalJSON);
+            resp.setStatus(200);
+        } catch (MismatchedInputException | InvalidRequestException e) {
             resp.setStatus(400);
-            ErrorResponse err = new ErrorResponse(400,"Bad Request: malformed credentials object provided");
-            respWriter.write(mapper.writeValueAsString(err));
-        } catch (AuthenticationException ae){
-            ae.printStackTrace();
-            resp.setStatus(401); //500 = internal server error
-            ErrorResponse err = new ErrorResponse(401,ae.getMessage());
-            respWriter.write(mapper.writeValueAsString(err));
-        }
-        catch (Exception e){
+            ErrorResponse err = new ErrorResponse(400, "Bad Request: Malformed credentials object found in request body");
+            String errJSON = mapper.writeValueAsString(err);
+            respWriter.write(errJSON);
+        } catch (AuthenticationException ae) {
+            resp.setStatus(401);
+            ErrorResponse err = new ErrorResponse(401, ae.getMessage());
+            String errJSON = mapper.writeValueAsString(err);
+
+        } catch (Exception e) {
             e.printStackTrace();
-            resp.setStatus(500); //500 = internal server error
-            ErrorResponse err = new ErrorResponse(500,"server: my bad.");
+            resp.setStatus(500); // 500 = INTERNAL SERVER ERROR
+            ErrorResponse err = new ErrorResponse(500, "It's not you, it's us. Our bad...");
             respWriter.write(mapper.writeValueAsString(err));
         }
     }

@@ -6,7 +6,11 @@
     background-color: rgb(255, 217, 0);
 }
 
-tr:hover{
+#btn:hover{
+    cursor: pointer;
+    background-color: #ccc;
+}
+#nav-item:hover{
     cursor: pointer;
     background-color: #ccc;
 }

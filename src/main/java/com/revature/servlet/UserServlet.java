@@ -33,11 +33,7 @@ public class UserServlet extends HttpServlet {
         System.out.println(req.getRequestURI());
         System.out.println(req.getParameter("id"));
 
-        Enumeration<String> paramNames = req.getHeaderNames();
-        while (req.getParameterNames().hasMoreElements()){
-            String paramValue = req.getParameter(paramNames.nextElement());
-            System.out.println(paramValue);
-        }
+
         try {
             String idParam = req.getParameter("id");
             String emailParam = req.getParameter("email");

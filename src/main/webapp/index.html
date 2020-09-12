@@ -8,34 +8,37 @@
 
 </head>
 <body>
-    
 
+    <div id="navbar">
+        <nav class="navbar navbar-expand-lg bg-dark">
+            <a class="navbar-brand" href="#">ERS</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse"
+                    data-target="#navbarNavAltMarkup"
+                    aria-controls="navbarNavAltMarkup" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                <span id="nav-dropdown" class="navbar-toggler-icon">Show</span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav">
+                    <a class="nav-item nav-link" id="toLogin">Login</a>
+                    <a class="nav-item nav-link" id="toRegister">Register</a>
+                    <a class="nav-item nav-link" id="toHome">Home</a>
+                    <a class="nav-item nav-link" id="toProfile">Profile</a>
+                    <a class="nav-item nav-link" id="toLogout">Logout</a>
+                </div>
+            </div>
+        </nav>
+    </div>
 
-      <div class="jumbotron jumbotron-fluid">
-        <div class="container" id="welcome-jumbo">
-          <h1 class="display-4">Welcome to ERS Home Page</h1>
-          <p class="lead">The Expense Reimbursement System (ERS) will manage the process of reimbursing employees for expenses incurred while on company time. All employees in the company can login and submit requests for reimbursement and view their past tickets and pending requests. Finance managers can log in and view all reimbursement requests and past history for all employees in the company. Finance managers are authorized to approve and deny requests for expense reimbursement.
-        </p>
-        </div>
-        
-          <a href="/ers/api/login">
-            <button id="login" type="button" class="btn btn-warning" > 
-              Login
-            </button>
-          </a>
-          <a href="/ers/api/create_account">
-            <button id="createAccount"type="button" class="btn btn-warning" >
-              Create Account
-            </button>
-          </a>
-          
-      </div>
+  <main class="container">
+    <div id="app-view"></div>
+  </main>
 
 
     <!-- JS, Popper.js, and jQuery -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
-
+    <script src="/ers/js/main.js"></script>
 </body>
 </html>

@@ -22,11 +22,9 @@ public class UserService {
 
     public Set<User> getAllUsers(){
         Set<User> users = userRepo.getAllusers();
-
         if (users.isEmpty()){
             throw new ResourceNotFoundException();
         }
-
         return users;
     }
 
@@ -36,39 +34,30 @@ public class UserService {
         if (username == null || username.trim().equals("") || password == null || password.trim().equals("")){
             throw new InvalidRequestException("Invalid credentials provided");
         }
-
         return userRepo.getAUserByUsernameAndPassword(username,password)
                 .orElseThrow(AuthenticationException::new);
     }
 
 
     public void register(User newUser) {
-
         if (!isUserValid(newUser)) {
             throw new InvalidRequestException("Invalid user field values provided during registration!");
         }
-
         Optional<User> existingUser = userRepo.getAUserByUsername(newUser.getUsername());
 
         if (existingUser.isPresent()) {
             // TODO implement a custom ResourcePersistenceException
             throw new ResourcePersistenceException("Username is already in use");
         }
-
         Optional<User> existingUserEmail = userRepo.getAUserByEmail(newUser.getEmail());
         if (existingUserEmail.isPresent()) {
             // TODO implement a custom ResourcePersistenceException
             throw new ResourcePersistenceException("Email is already in use");
         }
-
-
-
-
         newUser.setUserRole(Role.EMPLOYEE.ordinal() + 1);
         userRepo.addUser(newUser);
         System.out.println(newUser);
 //        app.setCurrentUser(newUser);
-
     }
 
 
@@ -78,6 +67,7 @@ public class UserService {
         }
         return userRepo.getAUserById(id).orElseThrow(ResourceNotFoundException::new);
     }
+
     public boolean deleteUserById(int id) {
         if (id <= 0){
             throw new InvalidRequestException("tHE PROVIDED ID CANNOT BE LESS THAN OR EQUAL TO ZERO");

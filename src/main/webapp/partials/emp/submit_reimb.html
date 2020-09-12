@@ -1,0 +1,28 @@
+<div id="submit-reimbursement-container">
+    <h3>Submit A Reimbursement Request</h3>
+    <p>Please Enter Reimbursement Details:</p>
+    <div class="form-group">
+        <label for="amount">Example Amount</label>
+        <input placeholder="$" id="amount" name="amount" value="default value"/><br>
+    </div>
+    <div class="form-group">
+        <label for="description">Enter Details</label>
+        <textarea class="form-control" id="description" rows="3"
+              placeholder="Description of Reimbursement" name="description"></textarea>
+    </div>
+    <div class="form-group">
+        <label for="type">Select Type</label>
+        <select class="form-control" id="type" name="type">
+            <option>Lodging</option>
+            <option>Travel</option>
+            <option>Food</option>
+            <option>Other</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <input type="file" id="image" onchange="showFiles(event)" accept="image/x-png,image/jpeg">
+    </div>
+    <div class="form-group">
+        <input type="submit" value="submit_reimb"/><br>
+    </div>
+</div>

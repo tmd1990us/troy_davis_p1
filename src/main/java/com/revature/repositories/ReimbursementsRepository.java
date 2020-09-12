@@ -32,7 +32,7 @@ public class ReimbursementsRepository {
      * @throws SQLException e
      * @throws IOException e
      */
-    public boolean addReimbursement(Reimbursement reimbursement) throws SQLException, IOException {
+    public boolean addReimbursement(Reimbursement reimbursement) {
         try(Connection conn = ConnectionFactory.getInstance().getConnection()) {
             String sql = baseInsert +
                     "(amount, description, author_id, " +
@@ -48,12 +48,15 @@ public class ReimbursementsRepository {
             //get the number of affected rows
             int rowsInserted = ps.executeUpdate();
             return rowsInserted != 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+        return false;
     }
 
     //---------------------------------- READ -------------------------------------------- //
 
-    public Set<Reimbursement> getAllReimbursements() throws SQLException {
+    public Set<Reimbursement> getAllReimbursements() {
         Set<Reimbursement> reimbursements = new HashSet<>();
         try(Connection conn = ConnectionFactory.getInstance().getConnection()) {
             String sql = baseQuery;
@@ -62,11 +65,13 @@ public class ReimbursementsRepository {
             ResultSet rs = ps.executeQuery();
 
             reimbursements = mapResultSet(rs);
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return reimbursements;
     }
 
-    public Set<Reimbursement> getAllReimbSetByStatus(ReimbursementStatus reStat) throws SQLException {
+    public Set<Reimbursement> getAllReimbSetByStatus(ReimbursementStatus reStat) {
         Set<Reimbursement> reimbursements = new HashSet<>();
         try(Connection conn = ConnectionFactory.getInstance().getConnection()) {
             String sql = baseQuery + "WHERE er.reimbursement_status_id=? ";
@@ -74,6 +79,8 @@ public class ReimbursementsRepository {
             ps.setInt(1,reStat.ordinal() + 1);
             ResultSet rs = ps.executeQuery();
             reimbursements = mapResultSet(rs);
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return reimbursements;
     }
@@ -105,7 +112,7 @@ public class ReimbursementsRepository {
      * @return a set of reimbursements mapped by the MapResultSet method
      * @throws SQLException e
      */
-    public Set<Reimbursement> getAllReimbSetByAuthorId(Integer authorId) throws SQLException {
+    public Set<Reimbursement> getAllReimbSetByAuthorId(Integer authorId){
         Set<Reimbursement> reimbursements = new HashSet<>();
         try(Connection conn = ConnectionFactory.getInstance().getConnection()) {
             String sql = baseQuery + "WHERE er.author_id=? ";
@@ -116,6 +123,8 @@ public class ReimbursementsRepository {
             ResultSet rs = ps.executeQuery();
 
             reimbursements = mapResultSet(rs);
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return reimbursements;
     }
@@ -158,6 +167,20 @@ public class ReimbursementsRepository {
             ps.setInt(2,reType.ordinal() + 1);
             ResultSet rs = ps.executeQuery();
             reimbursements = mapResultSet(rs);
+        }
+        return reimbursements;
+    }
+
+    public Set<Reimbursement> getAllReimbSetByType(ReimbursementType type)  {
+        Set<Reimbursement> reimbursements = new HashSet<>();
+        try(Connection conn = ConnectionFactory.getInstance().getConnection()) {
+            String sql = baseQuery + "WHERE er.reimbursement_type_id=? ";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1,type.ordinal() + 1);
+            ResultSet rs = ps.executeQuery();
+            reimbursements = mapResultSet(rs);
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return reimbursements;
     }
