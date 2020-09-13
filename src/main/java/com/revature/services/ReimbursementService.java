@@ -8,6 +8,7 @@ import com.revature.models.ReimbursementStatus;
 import com.revature.models.ReimbursementType;
 import com.revature.repositories.ReimbursementsRepository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -21,11 +22,11 @@ public class ReimbursementService {
         }
         return reimbursements;
     }
-    public Set<Reimbursement> getReimbByUserId(Integer userId){
+    public List<Reimbursement> getReimbByUserId(Integer userId){
         if (userId <= 0){
             throw new InvalidRequestException("THE PROVIDED USER ID CANNOT BE LESS THAN OR EQUAL TO ZERO");
         }
-        Set<Reimbursement> reimb = reimbRepo.getAllReimbSetByAuthorId(userId);
+        List<Reimbursement> reimb = reimbRepo.getAllReimbSetByAuthorId(userId);
         if (reimb.isEmpty()){
             throw new ResourceNotFoundException();
         }
@@ -62,7 +63,15 @@ public class ReimbursementService {
         }
         System.out.println(reimb);
     }
-
+    public void updateEMP(Reimbursement reimb) {
+        if (!isReimbursementValid(reimb)){
+            throw new InvalidRequestException("Invalid user field values provided!");
+        }
+        if(!reimbRepo.updateEMP(reimb)){
+            throw new ResourcePersistenceException("Something went wrong trying to save this reimbursement");
+        }
+        System.out.println(reimb);
+    }
 
 
 
@@ -74,4 +83,6 @@ public class ReimbursementService {
         if (reimb.getReimbursementType() == null ) return false;
         return true;
     }
+
+
 }

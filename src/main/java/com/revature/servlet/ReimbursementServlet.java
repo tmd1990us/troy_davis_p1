@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 import java.util.Set;
 
 @WebServlet("/reimbursements")
@@ -27,13 +28,13 @@ public class ReimbursementServlet extends HttpServlet {
         resp.setContentType("application/json");
 
         try {
-            String userIdParam = req.getParameter("userId");
+            String reimbIdParam = req.getParameter("reimbID");
             String statusParam =  req.getParameter("status");
             String typeParam = req.getParameter("type");
             Integer loggedRole = (Integer) req.getSession().getAttribute("loggedinrole");
             if (loggedRole == 3){
                 Integer userId = ((Integer) req.getSession().getAttribute("userId"));
-                Set<Reimbursement> reimbs = reimbService.getReimbByUserId(userId);
+                List<Reimbursement> reimbs = reimbService.getReimbByUserId(userId);
                 String reimbJSON = mapper.writeValueAsString(reimbs);
                 writer.write(reimbJSON);
                 resp.setStatus(200);
@@ -81,7 +82,34 @@ public class ReimbursementServlet extends HttpServlet {
         resp.setContentType("application/json");
         try {
             Reimbursement reimbursement = mapper.readValue(req.getInputStream(),Reimbursement.class);
+            reimbursement.setAuthorId((Integer) req.getSession().getAttribute("userId"));
             reimbService.save(reimbursement);
+            System.out.println(reimbursement);
+            String newReimbJSON = mapper.writeValueAsString(reimbursement);
+            writer.write(newReimbJSON);
+            resp.setStatus(201);
+        } catch (MismatchedInputException upe) {
+            upe.printStackTrace();
+            resp.setStatus(400);
+            ErrorResponse err = new ErrorResponse(400,"Bad Request: malformed user object found in request body");
+            writer.write(mapper.writeValueAsString(err));
+        }catch (Exception e){
+            e.printStackTrace();
+            resp.setStatus(500); //500 = internal server error
+            ErrorResponse err = new ErrorResponse(500,"server: my bad.");
+            writer.write(mapper.writeValueAsString(err));
+        }
+    }
+
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        PrintWriter writer = resp.getWriter();
+        resp.setContentType("application/json");
+        try {
+            Reimbursement reimbursement = mapper.readValue(req.getInputStream(),Reimbursement.class);
+            reimbursement.setAuthorId((Integer) req.getSession().getAttribute("userId"));
+            reimbService.updateEMP(reimbursement);
             System.out.println(reimbursement);
             String newReimbJSON = mapper.writeValueAsString(reimbursement);
             writer.write(newReimbJSON);

@@ -42,6 +42,8 @@ create table ers_users(
 	last_name varchar(25) not null,
 	email varchar(256) unique not null,
 	user_role_id int not null,
+	is_active boolean default true,
+	
 	
 	constraint ers_user_id
 	primary key (id),

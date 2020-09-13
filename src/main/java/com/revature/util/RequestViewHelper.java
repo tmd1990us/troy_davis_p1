@@ -11,6 +11,14 @@ public class RequestViewHelper {
             case "/login.view":
                 return "partials/login.html";
 
+            case "/ers/success.view":
+            case "/success.view":
+                return "partials/animations/success.html";
+
+            case "/ers/failure.view":
+            case "/failure.view":
+                return "partials/animations/failure.html";
+
             case "/ers/landing.view":
             case "/landing.view":
                 return "partials/landing.html";
@@ -30,6 +38,10 @@ public class RequestViewHelper {
             case "/ers/view_emp_reimb.view":
             case "/view_emp_reimb.view":
                 return "partials/emp/view_reimb.html";
+
+            case "/ers/update_emp_reimb.view":
+            case "/update_emp_reimb.view":
+                return "partials/emp/update_reimb.html";
 
             case "/ers/home.view":
             case "/home.view":

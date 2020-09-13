@@ -9,9 +9,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.*;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 /**
  * A class to interact with the database to CRUD reimbursement objects
@@ -112,8 +110,8 @@ public class ReimbursementsRepository {
      * @return a set of reimbursements mapped by the MapResultSet method
      * @throws SQLException e
      */
-    public Set<Reimbursement> getAllReimbSetByAuthorId(Integer authorId){
-        Set<Reimbursement> reimbursements = new HashSet<>();
+    public List<Reimbursement> getAllReimbSetByAuthorId(Integer authorId){
+        List<Reimbursement> reimbursements = new ArrayList<>();
         try(Connection conn = ConnectionFactory.getInstance().getConnection()) {
             String sql = baseQuery + "WHERE er.author_id=? ";
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -122,7 +120,7 @@ public class ReimbursementsRepository {
 
             ResultSet rs = ps.executeQuery();
 
-            reimbursements = mapResultSet(rs);
+            reimbursements = mapResultSetList(rs);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -249,6 +247,25 @@ public class ReimbursementsRepository {
     }
 
     //---------------------------------- UPDATE -------------------------------------------- //
+    public boolean updateEMP(Reimbursement reimb) {
+        try(Connection conn = ConnectionFactory.getInstance().getConnection()) {
+            String sql = baseUpdate +
+                    "SET amount=?, description=?, reimbursement_type_id=?\n" +
+                    "WHERE id=?\n";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setDouble(1, reimb.getAmount());
+            ps.setString(2, reimb.getDescription());
+            ps.setInt(3,reimb.getReimbursementType().ordinal() + 1);
+            ps.setInt(4,reimb.getId());
+            //get the number of affected rows
+            int rowsInserted = ps.executeUpdate();
+            return rowsInserted != 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     /**
      * A method to update only the resolved timestamp by the id of the reimbursement
      * @param reimbId The ID of the reimbursement in the database that is requested
@@ -380,6 +397,24 @@ public class ReimbursementsRepository {
      */
     private Set<Reimbursement> mapResultSet(ResultSet rs) throws SQLException {
         Set<Reimbursement> reimbursements = new HashSet<>();
+        while (rs.next()){
+            Reimbursement temp = new Reimbursement();
+            temp.setId(rs.getInt("id"));
+            temp.setAmount(rs.getDouble("amount"));
+            temp.setSubmitted(rs.getTimestamp("submitted"));
+            temp.setResolved(rs.getTimestamp("resolved"));
+            temp.setDescription(rs.getString("description"));
+            temp.setAuthorId(rs.getInt("author_id"));
+            temp.setResolverId(rs.getInt("resolver_id"));
+            temp.setReimbursementStatus(ReimbursementStatus.getByName(rs.getString("reimbursement_status_id")));
+            temp.setReimbursementType(ReimbursementType.getByName(rs.getString("reimbursement_type_id")));
+            reimbursements.add(temp);
+        }
+        return reimbursements;
+    }
+
+    private List<Reimbursement> mapResultSetList(ResultSet rs) throws SQLException {
+        List<Reimbursement> reimbursements = new ArrayList<>();
         while (rs.next()){
             Reimbursement temp = new Reimbursement();
             temp.setId(rs.getInt("id"));
