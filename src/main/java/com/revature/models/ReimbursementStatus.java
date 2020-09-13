@@ -32,6 +32,18 @@ public enum ReimbursementStatus {
 
     }
 
+    public static ReimbursementStatus getByNumber(Integer number){
+        switch (number){
+            case 1:
+                return PENDING;
+            case 2:
+                return APPROVED;
+            case 3:
+                return DENIED;
+        }
+        return CLOSED;
+    }
+
     @Override
     public String toString() {
         return reimbursementStaus;

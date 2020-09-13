@@ -85,6 +85,42 @@ function loadViewEmpReimb(){
     }
 }
 
+function loadViewAllReimb() {
+    console.log('in loadViewAllReimb()');
+    let xhr = new XMLHttpRequest();
+    xhr.open('GET', 'view_all_reimb.view'); // third parameter of this method is optional (defaults to true)
+    xhr.send();
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            APP_VIEW.innerHTML = xhr.responseText;
+            configureViewAllReimbView();
+        }
+    }
+}
+
+function loadApproveDenyReimb(obj) {
+    var index = obj.parentNode.parentNode.rowIndex; 
+    let x = document.getElementById("view-reimb-table").rows[index].cells[0];
+    let reimbID = x.innerHTML;
+    localStorage.setItem('reimbID',reimbID);
+    let amount = document.getElementById("view-reimb-table").rows[index].cells[1].innerHTML;
+    let description = document.getElementById("view-reimb-table").rows[index].cells[3].innerHTML;
+    let type = document.getElementById("view-reimb-table").rows[index].cells[4].innerHTML;
+    let authorId = document.getElementById("view-reimb-table").rows[index].cells[5].innerHTML;
+    let xhr = new XMLHttpRequest();
+    xhr.open('GET', 'update_fin_reimb.view');
+    let reim = {
+        reimbID: reimbID
+    }
+    xhr.send();
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            APP_VIEW.innerHTML = xhr.responseText;
+            document.getElementById('reimbID').innerHTML = localStorage.getItem('reimbID');
+        }
+    }
+}
+
 function loadUpdateReimb(obj){
     var index = obj.parentNode.parentNode.rowIndex; 
     let x = document.getElementById("view-reimb-table").rows[index].cells[0];
@@ -105,7 +141,7 @@ function loadUpdateReimb(obj){
             document.getElementById('reimbID').innerHTML = localStorage.getItem('reimbID');
             document.getElementById('amount').setAttribute('placeholder',amount);
             document.getElementById('description').setAttribute('placeholder',description);
-            document.getElementById('type').setAttribute('value',type);
+            document.getElementById('type').setAttribute('placeholder',type);
             document.getElementById('update').addEventListener('click', updateReimb);
         }
     }
@@ -214,7 +250,7 @@ function configureViewEmpReimbView() {
                 row.insertCell(5).innerHTML = reimbs[i].resolverId;
                 row.insertCell(6).innerHTML = reimbs[i].reimbursementStatus;
                 if (reimbs[i].reimbursementStatus == 'PENDING'){
-                    row.insertCell(7).innerHTML= '<input type="button" value = "Update" onClick="Javacsript:loadUpdateReimb(this)">';
+                    row.insertCell(7).innerHTML= '<input type="button" class="btn btn-primary" value = "Update" onClick="Javacsript:loadUpdateReimb(this)">';
                 }
             }
             
@@ -222,6 +258,38 @@ function configureViewEmpReimbView() {
     }
 }
 
+function configureViewAllReimbView(){
+    console.log('Getting All Reimbursements...');
+    let xhr = new XMLHttpRequest();
+    xhr.open('GET', 'reimbursements'); // third parameter of this method is optional (defaults to true)
+    xhr.send()
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            // APP_VIEW.innerHTML = xhr.responseText;
+            var myTableDiv = document.getElementById("view-all-reimb-table");
+            var table = document.createElement('TABLE');
+            var tableBody = document.createElement('TBODY');
+            table.appendChild(tableBody);
+            const reimbs = JSON.parse(xhr.responseText);
+            console.log(reimbs);
+            for (var i = 0; i < reimbs.length; i++){
+                var rowCount = myTableDiv.rows.length;
+                var row = myTableDiv.insertRow(rowCount);
+                row.insertCell(0).innerHTML = reimbs[i].id;
+                row.insertCell(1).innerHTML = reimbs[i].amount;
+                row.insertCell(2).innerHTML = reimbs[i].submitted;
+                row.insertCell(3).innerHTML = reimbs[i].description;
+                row.insertCell(4).innerHTML = reimbs[i].reimbursementType;
+                row.insertCell(5).innerHTML = reimbs[i].authorId;
+                row.insertCell(6).innerHTML = reimbs[i].reimbursementStatus;
+                if (reimbs[i].reimbursementStatus == 'PENDING'){
+                    row.insertCell(7).innerHTML= '<input type="button" class="btn btn-warning" value = "Approve/Deny" onClick="Javacsript:loadApproveDenyReimb(this)">';
+                }
+            }
+            
+        }
+    }
+}
 
 //------------------OPERATIONS-----------------------
 
@@ -265,6 +333,7 @@ function submitReimb(){
         description: ds,
         amount: am
     }
+    console.log(thisReimb);
     let reimbJSON = JSON.stringify(thisReimb);
     let xhr = new XMLHttpRequest();
     xhr.open('POST', 'reimbursements');

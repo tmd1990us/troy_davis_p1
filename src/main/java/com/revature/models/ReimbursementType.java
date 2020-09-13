@@ -32,6 +32,20 @@ public enum ReimbursementType {
 
     }
 
+    public static ReimbursementType getByNumber(Integer number){
+        switch (number){
+            case 1:
+                return LODGING;
+            case 2:
+                return TRAVEL;
+            case 3:
+                return FOOD;
+            case 4:
+                return OTHER;
+        }
+        return OTHER;
+    }
+
     @Override
     public String toString() {
         return reimbursementType;

@@ -39,9 +39,17 @@ public class RequestViewHelper {
             case "/view_emp_reimb.view":
                 return "partials/emp/view_reimb.html";
 
+            case "/ers/view_all_reimb.view":
+            case "/view_all_reimb.view":
+                return "partials/fin/view_reimb.html";
+
             case "/ers/update_emp_reimb.view":
             case "/update_emp_reimb.view":
                 return "partials/emp/update_reimb.html";
+
+            case "/ers/update_fin_reimb.view":
+            case "/update_fin_reimb.view":
+                return "partials/fin/reimb_detail.html";
 
             case "/ers/home.view":
             case "/home.view":

@@ -1,0 +1,56 @@
+<div>
+    <div class="form-row">
+        <div class="col-md-3 mb-3">
+            <label for="type">Fetch By Type</label>
+            <select class="custom-select" id="type" required name="type">
+                <option selected disabled value="">Choose</option>
+                <option>LODGING</option>
+                <option>TRAVEL</option>
+                <option>FOOD</option>
+                <option>OTHER</option>
+            </select>
+            <div class="invalid-feedback">
+                Please select a valid Type.
+            </div>
+        </div>
+    </div>
+    <button id="get-by-type" class="btn btn-primary" type="submit">Get</button>
+</div>
+
+
+<div>
+    <div class="form-row">
+        <div class="col-md-3 mb-3">
+            <label for="type">Fetch By Status</label>
+            <select class="custom-select" id="status" required name="status">
+                <option selected disabled value="">Choose</option>
+                <option>PENDING</option>
+                <option>APPROVED</option>
+                <option>DENIED</option>
+            </select>
+            <div class="invalid-feedback">
+                Please select a valid Type.
+            </div>
+        </div>
+    </div>
+    <button id="get-by-status" class="btn btn-primary" type="submit">Get</button>
+</div>
+
+
+<div id="view-all-reimb-container" class="table">
+    <h4>View Your Reimbursements & Details</h4>
+    <table id="view-all-reimb-table" class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Submitted </th>
+                <th scope="col">Description</th>
+                <th scope="col">Type</th>
+                <th scope="col">AuthorId</th>
+                <th scope="col">Status</th>
+                <th scope="col">Update</th>
+            </tr>
+        </thead>
+    </table>
+</div>
