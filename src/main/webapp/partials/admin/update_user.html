@@ -1,0 +1,39 @@
+<div class="login-container">
+    <h2>Admin</h2></br>
+    <h3>Update an ERS user ID: <span id="uID"></span> </h3>
+
+    <div class="form-group">
+        <label for="fn">First name</label>
+        <input type="text" class="form-control" id="fn" placeholder="Enter Employee first name">
+    </div>
+    <div class="form-group">
+        <label for="ln">Last name</label>
+        <input type="text" class="form-control" id="ln" placeholder="Enter Employee last name">
+    </div>
+    <div class="form-group">
+        <label for="email">Email Address</label>
+        <input type="email" class="form-control" id="email" placeholder="Enter Employee email address">
+    </div>
+    <div class="form-group">
+        <label for="reg-username">Username</label>
+        <input type="text" class="form-control" id="reg-username" placeholder="Enter Employee desired username">
+    </div>
+    <div class="form-group">
+        <label for="reg-password">Password</label>
+        <input type="password" class="form-control" id="reg-password" placeholder="Enter Employee password">
+    </div>
+    <div class="form-group">
+        <label for="reg-password">Role: </label>
+        <select id="role" name="role">
+            <option>EMPLOYEE</option>
+            <option>FINANCE_MANAGER</option>
+            <option>ADMIN</option>
+        </select>
+    </div>
+    <div id="reg-button-container">
+        <button type="submit" class="btn btn-warning" id="update">Update User</button>
+    </div>
+    <br/>
+    <br/>
+    <div class="alert alert-danger" id="reg-message"></div>
+</div>

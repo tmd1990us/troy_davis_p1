@@ -98,7 +98,7 @@ public class UserRepository {
     public Optional<User> getAUserByEmail(String email) {
         Optional<User> user = Optional.empty();
         try (Connection conn = ConnectionFactory.getInstance().getConnection()){
-            String sql = baseQuery + "WHERE eu.id=? ";
+            String sql = baseQuery + "WHERE email =? ";
             PreparedStatement psmt = conn.prepareStatement(sql);
             psmt.setString(1,email);
             ResultSet rs = psmt.executeQuery();
@@ -169,6 +169,26 @@ public class UserRepository {
 
     //---------------------------------- UPDATE -------------------------------------------- //
 
+    public boolean updateAUser(User newUser) {
+        try(Connection conn = ConnectionFactory.getInstance().getConnection()) {
+            String sql = baseUpdate +
+                    "SET first_name=?, last_name=?, email=?, user_role_id=?, username=?, password=?\n" +
+                    "WHERE id=?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1,newUser.getFirstname());
+            ps.setString(2,newUser.getLastname());
+            ps.setString(3,newUser.getEmail());
+            ps.setInt(4,newUser.getUserRole());
+            ps.setString(5,newUser.getUsername());
+            ps.setString(6, newUser.getPassword());
+            ps.setInt(7,newUser.getUserId());
+            int rowsInserted = ps.executeUpdate();
+            return rowsInserted != 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
     /**
      * A method to update the Role of a User in the database
      * @param userId ID of the user in the DB
@@ -199,7 +219,8 @@ public class UserRepository {
      */
     public boolean deleteAUserById(Integer userId) {
         try(Connection conn = ConnectionFactory.getInstance().getConnection()) {
-            String sql = "DELETE FROM project_1.ers_users\n" +
+            String sql = baseUpdate +
+                         "SET user_role_id=4\n" +
                          "WHERE id=? ";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, userId);
@@ -229,6 +250,7 @@ public class UserRepository {
             temp.setUserId(rs.getInt("id"));
             temp.setUsername(rs.getString("username"));
             temp.setPassword(rs.getString("password"));
+            temp.setEmail(rs.getString("email"));
             temp.setFirstname(rs.getString("first_name"));
             temp.setLastname(rs.getString("last_name"));
             temp.setUserRole(rs.getInt("user_role_id"));
@@ -236,4 +258,6 @@ public class UserRepository {
         }
         return users;
     }
+
+
 }

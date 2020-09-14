@@ -8,6 +8,9 @@ create table ers_user_roles(
 INSERT INTO project_1.ers_user_roles
 (role_name)
 VALUES('ADMIN'),('FINANCE_MANAGER'),('EMPLOYEE');
+INSERT INTO project_1.ers_user_roles
+(role_name)
+VALUES('DELETED');
 
 -- +++--------------------------------------------+++ --
 create table ers_reimbursement_types(
@@ -103,7 +106,7 @@ REFERENCES project_1.ers_users(id);
 
 INSERT INTO project_1.ers_users
 (username, password, first_name, last_name, email, user_role_id)
-VALUES('u5', crypt('password', gen_salt('bf', 10)), 'troy', 'davis', 'u5', 2);
+VALUES('u6', crypt('password', gen_salt('bf', 10)), 'troy', 'davis', 'u6', 1);
 
 select * from project_1.ers_users eu 
 where password = project_1.crypt('password', password);
@@ -114,6 +117,7 @@ truncate ers_users ;
 
 select * from ers_users eu ;
 
+select * from ers_reimbursements er ;
 --needed to be able to hash and unhash the passwords
 CREATE EXTENSION pgcrypto;
 

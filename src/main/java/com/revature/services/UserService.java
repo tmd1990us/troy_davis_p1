@@ -60,6 +60,15 @@ public class UserService {
 //        app.setCurrentUser(newUser);
     }
 
+    public void update(User newUser) {
+        if (userRepo.updateAUser(newUser)){
+            System.out.println(newUser);
+        }
+        else {
+            throw new ResourcePersistenceException("There was a problem trying to update the user");
+        }
+    }
+
 
     public User getUserById(int id) {
         if (id <= 0){
@@ -91,6 +100,15 @@ public class UserService {
         return users;
     }
 
+    public boolean isUsernameAvailable(String username) {
+        User user = userRepo.getAUserByUsername(username).orElse(null);
+        return user == null;
+    }
+
+    public boolean isEmailAvailable(String email) {
+        User user = userRepo.getAUserByEmail(email).orElse(null);
+        return user == null;
+    }
 
     /**
      * Validates that the given user and its fields are valid (not null or empty strings). Does

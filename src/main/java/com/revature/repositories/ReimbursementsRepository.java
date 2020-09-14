@@ -69,12 +69,12 @@ public class ReimbursementsRepository {
         return reimbursements;
     }
 
-    public Set<Reimbursement> getAllReimbSetByStatus(ReimbursementStatus reStat) {
+    public Set<Reimbursement> getAllReimbSetByStatus(Integer statusId) {
         Set<Reimbursement> reimbursements = new HashSet<>();
         try(Connection conn = ConnectionFactory.getInstance().getConnection()) {
             String sql = baseQuery + "WHERE er.reimbursement_status_id=? ";
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1,reStat.ordinal() + 1);
+            ps.setInt(1,statusId);
             ResultSet rs = ps.executeQuery();
             reimbursements = mapResultSet(rs);
         } catch (SQLException e) {
@@ -169,12 +169,12 @@ public class ReimbursementsRepository {
         return reimbursements;
     }
 
-    public Set<Reimbursement> getAllReimbSetByType(ReimbursementType type)  {
+    public Set<Reimbursement> getAllReimbSetByType(Integer typeId)  {
         Set<Reimbursement> reimbursements = new HashSet<>();
         try(Connection conn = ConnectionFactory.getInstance().getConnection()) {
             String sql = baseQuery + "WHERE er.reimbursement_type_id=? ";
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1,type.ordinal() + 1);
+            ps.setInt(1,typeId);
             ResultSet rs = ps.executeQuery();
             reimbursements = mapResultSet(rs);
         } catch (SQLException e) {
@@ -257,6 +257,25 @@ public class ReimbursementsRepository {
             ps.setString(2, reimb.getDescription());
             ps.setInt(3,reimb.getReimbursementType().ordinal() + 1);
             ps.setInt(4,reimb.getId());
+            //get the number of affected rows
+            int rowsInserted = ps.executeUpdate();
+            return rowsInserted != 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean updateFIN(Integer resolverId, Integer statusId, Integer reimbId) {
+        try(Connection conn = ConnectionFactory.getInstance().getConnection()) {
+            String sql = baseUpdate +
+                    "SET resolver_id=?, reimbursement_status_id=?, resolved=CURRENT_TIMESTAMP\n" +
+                    "WHERE id=?\n";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, resolverId);
+            ps.setInt(2, statusId);
+            ps.setInt(3,reimbId);
+
             //get the number of affected rows
             int rowsInserted = ps.executeUpdate();
             return rowsInserted != 0;
@@ -432,5 +451,6 @@ public class ReimbursementsRepository {
         System.out.println(reimbursements);
         return reimbursements;
     }
+
 
 }

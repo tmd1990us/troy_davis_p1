@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 
 public class RequestViewHelper {
     public String process(HttpServletRequest req) {
+        Integer loggedInRole = (Integer) req.getSession().getAttribute("loggedinrole");
         switch (req.getRequestURI()) {
             case "/ers/login.view":
             case "/login.view":
@@ -30,6 +31,30 @@ public class RequestViewHelper {
             case "/ers/register.view":
             case "/register.view":
                 return "partials/create_account.html";
+
+            case "/ers/admin_add_user.view":
+            case "/admin_add_user.view":
+                if (loggedInRole == 1){
+                    return "partials/admin/add_user.html";
+                }
+
+            case "/ers/view_all_users.view":
+            case "/view_all_users.view":
+                if (loggedInRole == 1) {
+                    return "partials/admin/view_users.html";
+                }
+
+            case "/ers/update_user.view":
+            case "/update_user.view":
+                if (loggedInRole == 1) {
+                    return "partials/admin/update_user.html";
+                }
+
+            case "/ers/delete_user.view":
+            case "/delete_user.view":
+                if (loggedInRole == 1) {
+                    return "partials/admin/delete_user.html";
+                }
 
             case "/ers/submit_reimb.view":
             case "/submit_reimb.view":
@@ -58,7 +83,7 @@ public class RequestViewHelper {
                     //user not logged in
                     return "partials/login.html";
                 }
-                Integer loggedInRole = (Integer) req.getSession().getAttribute("loggedinrole");
+
                 System.out.println("Logged in role is"+loggedInRole);
                 if (loggedInRole == 3){
                     System.out.println("sending to EmployeeDash");

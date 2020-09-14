@@ -32,22 +32,22 @@ public class ReimbursementService {
         }
         return reimb;
     }
-    public Set<Reimbursement> getReimbByType(String type){
-        if (type == null || type.isEmpty() || type.trim().equals("")){
+    public Set<Reimbursement> getReimbByType(Integer typeId){
+        if (typeId <= 0 || typeId >=5){
             throw new InvalidRequestException("THE PROVIDED USER ID CANNOT BE LESS THAN OR EQUAL TO ZERO");
         }
-        Set<Reimbursement> reimb = reimbRepo.getAllReimbSetByType(ReimbursementType.getByName(type));
+        Set<Reimbursement> reimb = reimbRepo.getAllReimbSetByType(typeId);
         if (reimb.isEmpty()){
             throw new ResourceNotFoundException();
         }
         return reimb;
     }
 
-    public Set<Reimbursement> getReimbByStatus(String status){
-        if (status == null || status.isEmpty() || status.trim().equals("")){
+    public Set<Reimbursement> getReimbByStatus(Integer statusId){
+        if (statusId <= 0 || statusId >= 4){
             throw new InvalidRequestException("THE PROVIDED USER ID CANNOT BE LESS THAN OR EQUAL TO ZERO");
         }
-        Set<Reimbursement> reimb = reimbRepo.getAllReimbSetByStatus(ReimbursementStatus.getByName(status));
+        Set<Reimbursement> reimb = reimbRepo.getAllReimbSetByStatus(statusId);
         if (reimb.isEmpty()){
             throw new ResourceNotFoundException();
         }
@@ -71,6 +71,22 @@ public class ReimbursementService {
             throw new ResourcePersistenceException("Something went wrong trying to save this reimbursement");
         }
         System.out.println(reimb);
+    }
+    public void approve(Integer resolverId, Integer reimbId) {
+        if (reimbId <= 0){
+            throw new InvalidRequestException("Invalid user field values provided!");
+        }
+        if(!reimbRepo.updateFIN(resolverId, 2, reimbId)){
+            throw new ResourcePersistenceException("Something went wrong trying to approve this reimbursement");
+        }
+    }
+    public void deny(Integer resolverId, Integer reimbId) {
+        if (reimbId <= 0){
+            throw new InvalidRequestException("Invalid user field values provided!");
+        }
+        if(!reimbRepo.updateFIN(resolverId, 3, reimbId)){
+            throw new ResourcePersistenceException("Something went wrong trying to deny this reimbursement");
+        }
     }
 
 

@@ -2,6 +2,7 @@ package com.revature.servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
+import com.revature.dtos.ApproveDeny;
 import com.revature.dtos.ErrorResponse;
 import com.revature.exceptions.InvalidRequestException;
 import com.revature.exceptions.ResourceNotFoundException;
@@ -40,14 +41,16 @@ public class ReimbursementServlet extends HttpServlet {
                 resp.setStatus(200);
             } else if (statusParam != null){
                 if (((Integer) req.getSession().getAttribute("loggedinrole")) == 2){
-                    Set<Reimbursement> reimbs = reimbService.getReimbByStatus(statusParam);
+                    System.out.println(statusParam);
+                    Set<Reimbursement> reimbs = reimbService.getReimbByStatus(Integer.valueOf(statusParam));
                     String reimbJSON = mapper.writeValueAsString(reimbs);
                     writer.write(reimbJSON);
                     resp.setStatus(200);
                 }
             }else if (typeParam != null){
                 if (((Integer) req.getSession().getAttribute("loggedinrole")) == 2){
-                    Set<Reimbursement> reimbs = reimbService.getReimbByType(typeParam);
+                    System.out.println(typeParam);
+                    Set<Reimbursement> reimbs = reimbService.getReimbByType(Integer.valueOf(typeParam));
                     String reimbJSON = mapper.writeValueAsString(reimbs);
                     writer.write(reimbJSON);
                     resp.setStatus(200);
@@ -105,15 +108,30 @@ public class ReimbursementServlet extends HttpServlet {
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         ObjectMapper mapper = new ObjectMapper();
         PrintWriter writer = resp.getWriter();
-        resp.setContentType("application/json");
+
         try {
-            Reimbursement reimbursement = mapper.readValue(req.getInputStream(),Reimbursement.class);
-            reimbursement.setAuthorId((Integer) req.getSession().getAttribute("userId"));
-            reimbService.updateEMP(reimbursement);
-            System.out.println(reimbursement);
-            String newReimbJSON = mapper.writeValueAsString(reimbursement);
-            writer.write(newReimbJSON);
-            resp.setStatus(201);
+            Integer loggedRole = (Integer) req.getSession().getAttribute("loggedinrole");
+            if (loggedRole == 3){
+                resp.setContentType("application/json");
+                Reimbursement reimbursement = mapper.readValue(req.getInputStream(),Reimbursement.class);
+                reimbursement.setAuthorId((Integer) req.getSession().getAttribute("userId"));
+                reimbService.updateEMP(reimbursement);
+                System.out.println(reimbursement);
+                String newReimbJSON = mapper.writeValueAsString(reimbursement);
+                writer.write(newReimbJSON);
+                resp.setStatus(201);
+            }
+            if (loggedRole == 2){
+                ApproveDeny approveDeny = mapper.readValue(req.getInputStream(),ApproveDeny.class);
+                Integer resolverId = (Integer) req.getSession().getAttribute("userId");
+                if (approveDeny.getStatus() == 2){
+                    reimbService.approve(resolverId, approveDeny.getId());
+                    resp.setStatus(201);
+                } else if (approveDeny.getStatus() == 3){
+                    reimbService.deny(resolverId, approveDeny.getId());
+                    resp.setStatus(201);
+                }
+            }
         } catch (MismatchedInputException upe) {
             upe.printStackTrace();
             resp.setStatus(400);
@@ -126,4 +144,5 @@ public class ReimbursementServlet extends HttpServlet {
             writer.write(mapper.writeValueAsString(err));
         }
     }
+
 }

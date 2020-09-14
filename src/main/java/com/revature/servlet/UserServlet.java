@@ -61,10 +61,14 @@ public class UserServlet extends HttpServlet {
                 resp.setStatus(200);
             }
             else {
-                Set<User> users = userService.getAllUsers();
-                String usersJSON = mapper.writeValueAsString(users);
-                writer.write(usersJSON);
-                resp.setStatus(200); //not required will be 200 by default
+                Integer loggedInRole = (Integer) req.getSession().getAttribute("loggedinrole");
+                if (loggedInRole == 1){
+                    Set<User> users = userService.getAllUsers();
+                    String usersJSON = mapper.writeValueAsString(users);
+                    writer.write(usersJSON);
+                    resp.setStatus(200); //not required will be 200 by default
+                }
+
             }
         } catch (ResourceNotFoundException rnfe){
             resp.setStatus(404);
@@ -120,34 +124,48 @@ public class UserServlet extends HttpServlet {
     }
 
     @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType("application/json");
+        ObjectMapper mapper = new ObjectMapper();
+        PrintWriter respWriter = resp.getWriter();
+
+        try {
+            Integer loggedInRole = (Integer) req.getSession().getAttribute("loggedinrole");
+            if (loggedInRole == 1){
+                User updatedUser = mapper.readValue(req.getInputStream(),User.class);
+                System.out.println(updatedUser.toString());
+                userService.update(updatedUser);
+                resp.setStatus(201); // 201 = created
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+            resp.setStatus(500); //500 = internal server error
+            ErrorResponse err = new ErrorResponse(500,"server: my bad.");
+            respWriter.write(mapper.writeValueAsString(err));
+        }
+    }
+
+    @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
         ObjectMapper mapper = new ObjectMapper();
         PrintWriter respWriter = resp.getWriter();
 
-        HttpSession session = req.getSession();
-        session.getAttribute("auth-user");
-        //get the current user role from the current session
-        Role userRole = (Role) session.getAttribute("user-role");
-        //make sure current role is admin
-        if (userRole.equals(Role.ADMIN)){
-            try {
-                String idParam = req.getParameter("id");
-                if (idParam != null){
-                    //Get the user by id if present
-                    int id = Integer.parseInt(idParam);
-                    boolean deleted = userService.deleteUserById(id);
-                    if (deleted){
-                        resp.setStatus(201);
-                    }
+        try {
+            Integer loggedInRole = (Integer) req.getSession().getAttribute("loggedinrole");
+            if (loggedInRole == 1){
+                int idParam = Integer.parseInt(req.getParameter("id"));
+                System.out.println("id to delete: " + idParam);
+                if (userService.deleteUserById(idParam)) {
+                    resp.setStatus(201); // 201 = created
                 }
-            }catch (Exception e){
-                e.printStackTrace();
-                resp.setStatus(500); //500 = internal server error
-                ErrorResponse err = new ErrorResponse(500,"server: my bad.");
-                respWriter.write(mapper.writeValueAsString(err));
             }
-
+        } catch (Exception e){
+            e.printStackTrace();
+            resp.setStatus(500); //500 = internal server error
+            ErrorResponse err = new ErrorResponse(500,"server: my bad.");
+            respWriter.write(mapper.writeValueAsString(err));
         }
+
     }
 }
