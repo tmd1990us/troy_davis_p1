@@ -264,7 +264,7 @@ function loadUpdateReimb(obj){
             APP_VIEW.innerHTML = xhr.responseText;
             document.getElementById('reimbID').innerHTML = localStorage.getItem('reimbID');
             document.getElementById('amount').setAttribute('value',amount);
-            document.getElementById('description').setAttribute('value',description);
+            document.getElementById('description').innerHTML = description;
             document.getElementById('type').setAttribute('value',type);
             document.getElementById('update').addEventListener('click', updateReimb);
             document.getElementById('cancel').addEventListener('click', loadViewEmpReimb);
@@ -337,10 +337,6 @@ function loadHome() {
         return;
     }
     let xhr = new XMLHttpRequest();
-    // var homeUser = JSON.parse(localStorage.getItem('authUser'));
-    // var role = homeUser.role;
-    // console.log('the current role is: ');
-    // console.log(role);
     xhr.open('GET', 'home.view');
     xhr.send();
     xhr.onreadystatechange = function() {
@@ -468,9 +464,6 @@ function configureViewEmpReimbView() {
         if (xhr.readyState == 4 && xhr.status == 200) {
             // APP_VIEW.innerHTML = xhr.responseText;
             var myTableDiv = document.getElementById("view-reimb-table");
-            var table = document.createElement('TABLE');
-            var tableBody = document.createElement('TBODY');
-            table.appendChild(tableBody);
             const reimbs = JSON.parse(xhr.responseText);
             console.log(reimbs);
             for (var i = 0; i < reimbs.length; i++){

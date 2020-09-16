@@ -33,43 +33,40 @@ public class UserServlet extends HttpServlet {
 
         System.out.println(req.getRequestURI());
         System.out.println(req.getParameter("id"));
-
-
         try {
-            String idParam = req.getParameter("id");
-            String emailParam = req.getParameter("email");
-            String roleParam = req.getParameter("role");
-            if (idParam != null){
-                //Get the user by id if present
-                int id = Integer.parseInt(idParam);
-                User user = userService.getUserById(id);
-                String userJSON = mapper.writeValueAsString(user);
-                writer.write(userJSON);
-                resp.setStatus(200);
-            }
-            if (emailParam != null){
-                //Get the user by id if present
-                User user = userService.getUserByEmail(emailParam);
-                String userJSON = mapper.writeValueAsString(user);
-                writer.write(userJSON);
-                resp.setStatus(200);
-            }
-            if (roleParam != null){
-                //Get all users by role if present
-                List<User> users = userService.getUsersByRole(roleParam);
-                String userJSON = mapper.writeValueAsString(users);
-                writer.write(userJSON);
-                resp.setStatus(200);
-            }
-            else {
-                Integer loggedInRole = (Integer) req.getSession().getAttribute("loggedinrole");
-                if (loggedInRole == 1){
-                    List<User> users = userService.getAllUsers();
-                    String usersJSON = mapper.writeValueAsString(users);
-                    writer.write(usersJSON);
-                    resp.setStatus(200); //not required will be 200 by default
-                }
+//            String idParam = req.getParameter("id");
+//            String emailParam = req.getParameter("email");
+//            String roleParam = req.getParameter("role");
+//            if (idParam != null){
+//                //Get the user by id if present
+//                int id = Integer.parseInt(idParam);
+//                User user = userService.getUserById(id);
+//                String userJSON = mapper.writeValueAsString(user);
+//                writer.write(userJSON);
+//                resp.setStatus(200);
+//            }
+//            if (emailParam != null){
+//                //Get the user by id if present
+//                User user = userService.getUserByEmail(emailParam);
+//                String userJSON = mapper.writeValueAsString(user);
+//                writer.write(userJSON);
+//                resp.setStatus(200);
+//            }
+//            if (roleParam != null){
+//                //Get all users by role if present
+//                List<User> users = userService.getUsersByRole(roleParam);
+//                String userJSON = mapper.writeValueAsString(users);
+//                writer.write(userJSON);
+//                resp.setStatus(200);
+//            }
 
+            Integer loggedInRole = (Integer) req.getSession().getAttribute("loggedinrole");
+            //check to see if Admin role before sending all users
+            if (loggedInRole == 1){
+                List<User> users = userService.getAllUsers();
+                String usersJSON = mapper.writeValueAsString(users);
+                writer.write(usersJSON);
+                resp.setStatus(200); //not required will be 200 by default
             }
         } catch (ResourceNotFoundException rnfe){
             resp.setStatus(404);

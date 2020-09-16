@@ -121,6 +121,18 @@ select * from ers_reimbursements er ;
 --needed to be able to hash and unhash the passwords
 CREATE EXTENSION pgcrypto;
 
-SELECT id, amount, submitted, resolved, description, reciept, author_id, resolver_id, reimbursement_status_id, reimbursement_type_id
-FROM project_1.ers_reimbursements;
+SELECT er.id, er.amount, er.description, er.reimbursement_status_id, 
+er.reimbursement_type_id, er.resolved, er.submitted,  er.author_id , er.resolver_id,
+author.first_name as author_first_name , author.last_name as author_last_name , 
+resolver.first_name as resolver_first_name, resolver.last_name as resolver_last_name
+FROM project_1.ers_reimbursements er
+left join project_1.ers_users author 
+on er.author_id = author.id
+left join project_1.ers_users resolver 
+on er.resolver_id = resolver.id;
+
+SELECT * FROM project_1.ers_reimbursements er
+join ers_users author 
+on er.author_id = author.id
+where author.username = 'u4';
 
