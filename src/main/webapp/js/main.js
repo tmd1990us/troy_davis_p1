@@ -1,7 +1,7 @@
 const APP_VIEW = document.getElementById('app-view');
 const APP_NAVBAR = document.getElementById('app-navbar');
 window.onload = function() {
-    loadLogin();
+    loadLanding();
    document.getElementById('toLogin').addEventListener('click', loadLogin);
    document.getElementById('toRegister').addEventListener('click', loadRegister);
    document.getElementById('toHome').addEventListener('click', loadHome);
@@ -20,7 +20,18 @@ function loadLogin() {
         }
     }
 }
-
+function loadLanding() {
+    console.log('in loadLanding()');
+    let xhr = new XMLHttpRequest();
+    xhr.open('GET', 'landing.view', true); // third parameter (default true) indicates we want to make this req async
+    xhr.send();
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            APP_VIEW.innerHTML = xhr.responseText;
+            configureLandingView();
+        }
+    }
+}
 function loadSuccess() {
     console.log('in loadSuccess()');
     let xhr = new XMLHttpRequest();
@@ -229,6 +240,7 @@ function loadApproveDenyReimb(obj) {
             document.getElementById('authorId').innerHTML = authorId;
             document.getElementById('approve').addEventListener('click', approveReimb);
             document.getElementById('deny').addEventListener('click', denyReimb);
+            document.getElementById('cancel').addEventListener('click', loadViewAllReimb);
         }
     }
 }
@@ -251,9 +263,9 @@ function loadUpdateReimb(obj){
         if (xhr.readyState == 4 && xhr.status == 200) {
             APP_VIEW.innerHTML = xhr.responseText;
             document.getElementById('reimbID').innerHTML = localStorage.getItem('reimbID');
-            document.getElementById('amount').setAttribute('placeholder',amount);
-            document.getElementById('description').setAttribute('placeholder',description);
-            document.getElementById('type').setAttribute('placeholder',type);
+            document.getElementById('amount').setAttribute('value',amount);
+            document.getElementById('description').setAttribute('value',description);
+            document.getElementById('type').setAttribute('value',type);
             document.getElementById('update').addEventListener('click', updateReimb);
             document.getElementById('cancel').addEventListener('click', loadViewEmpReimb);
         }
@@ -285,6 +297,7 @@ function loadUpdateUser(obj){
             document.getElementById('email').setAttribute('value', email);
             document.getElementById('reg-username').setAttribute('value', un);
             document.getElementById('update').addEventListener('click', update_user);
+            document.getElementById('cancel').addEventListener('click', loadViewAllUsers);
         }
     }
 }
@@ -343,10 +356,17 @@ function loadHome() {
 
 function configureSuccess(){
     const element = document.getElementById('success-element');
-    element.classList.add('animate__animated', 'animate__zoomIn', 'animate__slow');
+    element.classList.add('animate__animated', 'animate__zoomIn');
     element.addEventListener('animationend', () => {
-        loadViewEmpReimb();
+        loadHome();
     });
+}
+
+function configureLandingView() {
+    console.log('in configureLandingView()');
+    document.getElementById('login').addEventListener('click', loadLogin);
+    document.getElementById('createAccount').addEventListener('click', loadRegister);
+
 }
 
 function configureLoginView() {
@@ -421,9 +441,20 @@ function configureViewAllUsersView() {
                 row.insertCell(2).innerHTML = reimbs[i].firstname;
                 row.insertCell(3).innerHTML = reimbs[i].lastname;
                 row.insertCell(4).innerHTML = reimbs[i].email;
-                row.insertCell(5).innerHTML = reimbs[i].userRole;
-                row.insertCell(6).innerHTML= '<input type="button" class="btn btn-primary" value = "Update User" onClick="Javacsript:loadUpdateUser(this)">';
-                row.insertCell(7).innerHTML= '<input type="button" class="btn btn-primary" value = "Delete User" onClick="Javacsript:loadDeleteUser(this)">';
+                if(reimbs[i].userRole == 1){
+                    row.insertCell(5).innerHTML = 'Admin';
+                    row.setAttribute('class', 'table-warning');
+                } else if(reimbs[i].userRole == 2){
+                    row.insertCell(5).innerHTML = 'Finance Manager';
+                    row.setAttribute('class', 'table-success');
+                }else if (reimbs[i].userRole == 3){
+                    row.insertCell(5).innerHTML = 'Employee';
+                }else if (reimbs[i].userRole == 4){
+                    row.insertCell(5).innerHTML = 'Deleted';
+                    row.setAttribute('class', 'table-danger');
+                }
+                row.insertCell(6).innerHTML= '<input type="button" class="btn btn-warning" value = "Update User" onClick="Javacsript:loadUpdateUser(this)">';
+                row.insertCell(7).innerHTML= '<input type="button" class="btn btn-danger" value = "Delete User" onClick="Javacsript:loadDeleteUser(this)">';
             }
         }
     }
@@ -445,21 +476,22 @@ function configureViewEmpReimbView() {
             for (var i = 0; i < reimbs.length; i++){
                 var rowCount = myTableDiv.rows.length;
                 var row = myTableDiv.insertRow(rowCount);
+                
                 row.insertCell(0).innerHTML = reimbs[i].id;
-                row.insertCell(1).innerHTML = reimbs[i].amount;
+                row.insertCell(1).innerHTML = '$'+reimbs[i].amount;
                 row.insertCell(2).innerHTML = reimbs[i].submitted;
                 row.insertCell(3).innerHTML = reimbs[i].description;
-                row.insertCell(4).innerHTML = reimbs[i].reimbursementType;
-                row.insertCell(5).innerHTML = reimbs[i].resolverId;
-                row.insertCell(6).innerHTML = reimbs[i].reimbursementStatus;
-                if (reimbs[i].reimbursementStatus == 'PENDING'){
+                row.insertCell(4).innerHTML = reimbs[i].type;
+                row.insertCell(5).innerHTML = reimbs[i].resolverName;
+                row.insertCell(6).innerHTML = reimbs[i].status;
+                if (reimbs[i].status.toUpperCase() == 'PENDING'){
                     row.insertCell(7).innerHTML= '<input type="button" class="btn btn-primary" value = "Update" onClick="Javacsript:loadUpdateReimb(this)">';
                 }
-                if (reimbs[i].reimbursementStatus == 'APPROVED') {
+                if (reimbs[i].status.toUpperCase() == 'APPROVED') {
                     row.insertCell(7).innerHTML= '<input type="button" class="btn btn-secondary" value = "Update">';
                     row.setAttribute('class', 'table-success');
                 }
-                if (reimbs[i].reimbursementStatus == 'DENIED') {
+                if (reimbs[i].status.toUpperCase() == 'DENIED') {
                     row.insertCell(7).innerHTML= '<input type="button" class="btn btn-secondary" value = "Update">';
                     row.setAttribute('class', 'table-danger');
                 }
@@ -468,7 +500,6 @@ function configureViewEmpReimbView() {
         }
     }
 }
-
 function configureViewAllReimbView(){
     document.getElementById('get-by-type-food').addEventListener('click', loadViewAllReimbByTypeFood);
     document.getElementById('get-by-type-lodging').addEventListener('click', loadViewAllReimbByTypeLodging);
@@ -492,21 +523,20 @@ function configureViewAllReimbView(){
                 var rowCount = myTableDiv.rows.length;
                 var row = myTableDiv.insertRow(rowCount);
                 row.insertCell(0).innerHTML = reimbs[i].id;
-                row.insertCell(1).innerHTML = reimbs[i].amount;
+                row.insertCell(1).innerHTML = '$'+reimbs[i].amount;
                 row.insertCell(2).innerHTML = reimbs[i].submitted;
                 row.insertCell(3).innerHTML = reimbs[i].description;
-                row.insertCell(4).innerHTML = reimbs[i].reimbursementType;
-                row.insertCell(5).innerHTML = reimbs[i].authorId;
-                row.insertCell(6).innerHTML = reimbs[i].reimbursementStatus;
-                if (reimbs[i].reimbursementStatus == 'PENDING'){
-                    row.insertCell(7).innerHTML= '<input type="button" class="btn btn-warning" value = "Approve/Deny" onClick="Javacsript:loadApproveDenyReimb(this)">';
+                row.insertCell(4).innerHTML = reimbs[i].type;
+                row.insertCell(5).innerHTML = reimbs[i].authorName;
+                row.insertCell(6).innerHTML = reimbs[i].status;
+                if (reimbs[i].status.toUpperCase() == 'PENDING'){
+                    row.insertCell(7).innerHTML= '<input type="button" class="btn btn-danger" value = "Approve/Deny" onClick="Javacsript:loadApproveDenyReimb(this)">';
                 }
             }
             
         }
     }
 }
-
 function  configureViewAllReimbByTypeFoodView(){
     document.getElementById('get-by-type-food').addEventListener('click', loadViewAllReimbByTypeFood);
     document.getElementById('get-by-type-lodging').addEventListener('click', loadViewAllReimbByTypeLodging);
@@ -530,14 +560,14 @@ function  configureViewAllReimbByTypeFoodView(){
                 var rowCount = myTableDiv.rows.length;
                 var row = myTableDiv.insertRow(rowCount);
                 row.insertCell(0).innerHTML = reimbs[i].id;
-                row.insertCell(1).innerHTML = reimbs[i].amount;
+                row.insertCell(1).innerHTML = '$'+reimbs[i].amount;
                 row.insertCell(2).innerHTML = reimbs[i].submitted;
                 row.insertCell(3).innerHTML = reimbs[i].description;
-                row.insertCell(4).innerHTML = reimbs[i].reimbursementType;
-                row.insertCell(5).innerHTML = reimbs[i].authorId;
-                row.insertCell(6).innerHTML = reimbs[i].reimbursementStatus;
-                if (reimbs[i].reimbursementStatus == 'PENDING'){
-                    row.insertCell(7).innerHTML= '<input type="button" class="btn btn-warning" value = "Approve/Deny" onClick="Javacsript:loadApproveDenyReimb(this)">';
+                row.insertCell(4).innerHTML = reimbs[i].type;
+                row.insertCell(5).innerHTML = reimbs[i].authorName;
+                row.insertCell(6).innerHTML = reimbs[i].status;
+                if (reimbs[i].status.toUpperCase() == 'PENDING'){
+                    row.insertCell(7).innerHTML=  '<input type="button" class="btn btn-danger" value = "Approve/Deny" onClick="Javacsript:loadApproveDenyReimb(this)">';
                 }
             }
             
@@ -567,14 +597,14 @@ function  configureViewAllReimbByTypeLodgingView(){
                 var rowCount = myTableDiv.rows.length;
                 var row = myTableDiv.insertRow(rowCount);
                 row.insertCell(0).innerHTML = reimbs[i].id;
-                row.insertCell(1).innerHTML = reimbs[i].amount;
+                row.insertCell(1).innerHTML = '$'+reimbs[i].amount;
                 row.insertCell(2).innerHTML = reimbs[i].submitted;
                 row.insertCell(3).innerHTML = reimbs[i].description;
-                row.insertCell(4).innerHTML = reimbs[i].reimbursementType;
-                row.insertCell(5).innerHTML = reimbs[i].authorId;
-                row.insertCell(6).innerHTML = reimbs[i].reimbursementStatus;
-                if (reimbs[i].reimbursementStatus == 'PENDING'){
-                    row.insertCell(7).innerHTML= '<input type="button" class="btn btn-warning" value = "Approve/Deny" onClick="Javacsript:loadApproveDenyReimb(this)">';
+                row.insertCell(4).innerHTML = reimbs[i].type;
+                row.insertCell(5).innerHTML = reimbs[i].authorName;
+                row.insertCell(6).innerHTML = reimbs[i].status;
+                if (reimbs[i].status.toUpperCase() == 'PENDING'){
+                    row.insertCell(7).innerHTML= '<input type="button" class="btn btn-danger" value = "Approve/Deny" onClick="Javacsript:loadApproveDenyReimb(this)">';
                 }
             }
             
@@ -604,14 +634,14 @@ function  configureViewAllReimbByTypeTravelView(){
                 var rowCount = myTableDiv.rows.length;
                 var row = myTableDiv.insertRow(rowCount);
                 row.insertCell(0).innerHTML = reimbs[i].id;
-                row.insertCell(1).innerHTML = reimbs[i].amount;
+                row.insertCell(1).innerHTML = '$'+reimbs[i].amount;
                 row.insertCell(2).innerHTML = reimbs[i].submitted;
                 row.insertCell(3).innerHTML = reimbs[i].description;
-                row.insertCell(4).innerHTML = reimbs[i].reimbursementType;
-                row.insertCell(5).innerHTML = reimbs[i].authorId;
-                row.insertCell(6).innerHTML = reimbs[i].reimbursementStatus;
-                if (reimbs[i].reimbursementStatus == 'PENDING'){
-                    row.insertCell(7).innerHTML= '<input type="button" class="btn btn-warning" value = "Approve/Deny" onClick="Javacsript:loadApproveDenyReimb(this)">';
+                row.insertCell(4).innerHTML = reimbs[i].type;
+                row.insertCell(5).innerHTML = reimbs[i].authorName;
+                row.insertCell(6).innerHTML = reimbs[i].status;
+                if (reimbs[i].status.toUpperCase() == 'PENDING'){
+                    row.insertCell(7).innerHTML= '<input type="button" class="btn btn-danger" value = "Approve/Deny" onClick="Javacsript:loadApproveDenyReimb(this)">';
                 }
             }
             
@@ -641,14 +671,14 @@ function  configureViewAllReimbByTypeOtherView(){
                 var rowCount = myTableDiv.rows.length;
                 var row = myTableDiv.insertRow(rowCount);
                 row.insertCell(0).innerHTML = reimbs[i].id;
-                row.insertCell(1).innerHTML = reimbs[i].amount;
+                row.insertCell(1).innerHTML = '$'+reimbs[i].amount;
                 row.insertCell(2).innerHTML = reimbs[i].submitted;
                 row.insertCell(3).innerHTML = reimbs[i].description;
-                row.insertCell(4).innerHTML = reimbs[i].reimbursementType;
-                row.insertCell(5).innerHTML = reimbs[i].authorId;
-                row.insertCell(6).innerHTML = reimbs[i].reimbursementStatus;
-                if (reimbs[i].reimbursementStatus == 'PENDING'){
-                    row.insertCell(7).innerHTML= '<input type="button" class="btn btn-warning" value = "Approve/Deny" onClick="Javacsript:loadApproveDenyReimb(this)">';
+                row.insertCell(4).innerHTML = reimbs[i].type;
+                row.insertCell(5).innerHTML = reimbs[i].authorName;
+                row.insertCell(6).innerHTML = reimbs[i].status;
+                if (reimbs[i].status.toUpperCase() == 'PENDING'){
+                    row.insertCell(7).innerHTML= '<input type="button" class="btn btn-danger" value = "Approve/Deny" onClick="Javacsript:loadApproveDenyReimb(this)">';
                 }
             }
             
@@ -678,14 +708,14 @@ function configureViewAllReimbByStatusPendingView() {
                 var rowCount = myTableDiv.rows.length;
                 var row = myTableDiv.insertRow(rowCount);
                 row.insertCell(0).innerHTML = reimbs[i].id;
-                row.insertCell(1).innerHTML = reimbs[i].amount;
+                row.insertCell(1).innerHTML = '$'+reimbs[i].amount;
                 row.insertCell(2).innerHTML = reimbs[i].submitted;
                 row.insertCell(3).innerHTML = reimbs[i].description;
-                row.insertCell(4).innerHTML = reimbs[i].reimbursementType;
-                row.insertCell(5).innerHTML = reimbs[i].authorId;
-                row.insertCell(6).innerHTML = reimbs[i].reimbursementStatus;
-                if (reimbs[i].reimbursementStatus == 'PENDING'){
-                    row.insertCell(7).innerHTML= '<input type="button" class="btn btn-warning" value = "Approve/Deny" onClick="Javacsript:loadApproveDenyReimb(this)">';
+                row.insertCell(4).innerHTML = reimbs[i].type;
+                row.insertCell(5).innerHTML = reimbs[i].authorName;
+                row.insertCell(6).innerHTML = reimbs[i].status;
+                if (reimbs[i].status.toUpperCase() == 'PENDING'){
+                    row.insertCell(7).innerHTML= '<input type="button" class="btn btn-danger" value = "Approve/Deny" onClick="Javacsript:loadApproveDenyReimb(this)">';
                 }
             }
             
@@ -715,14 +745,14 @@ function configureViewAllReimbByStatusApprovedView() {
                 var rowCount = myTableDiv.rows.length;
                 var row = myTableDiv.insertRow(rowCount);
                 row.insertCell(0).innerHTML = reimbs[i].id;
-                row.insertCell(1).innerHTML = reimbs[i].amount;
+                row.insertCell(1).innerHTML = '$'+reimbs[i].amount;
                 row.insertCell(2).innerHTML = reimbs[i].submitted;
                 row.insertCell(3).innerHTML = reimbs[i].description;
-                row.insertCell(4).innerHTML = reimbs[i].reimbursementType;
-                row.insertCell(5).innerHTML = reimbs[i].authorId;
-                row.insertCell(6).innerHTML = reimbs[i].reimbursementStatus;
-                if (reimbs[i].reimbursementStatus == 'PENDING'){
-                    row.insertCell(7).innerHTML= '<input type="button" class="btn btn-warning" value = "Approve/Deny" onClick="Javacsript:loadApproveDenyReimb(this)">';
+                row.insertCell(4).innerHTML = reimbs[i].type;
+                row.insertCell(5).innerHTML = reimbs[i].authorName;
+                row.insertCell(6).innerHTML = reimbs[i].status;
+                if (reimbs[i].status.toUpperCase() == 'PENDING'){
+                    row.insertCell(7).innerHTML= '<input type="button" class="btn btn-danger" value = "Approve/Deny" onClick="Javacsript:loadApproveDenyReimb(this)">';
                 }
             }
             
@@ -752,14 +782,14 @@ function configureViewAllReimbByStatusDeniedView() {
                 var rowCount = myTableDiv.rows.length;
                 var row = myTableDiv.insertRow(rowCount);
                 row.insertCell(0).innerHTML = reimbs[i].id;
-                row.insertCell(1).innerHTML = reimbs[i].amount;
+                row.insertCell(1).innerHTML = '$'+reimbs[i].amount;
                 row.insertCell(2).innerHTML = reimbs[i].submitted;
                 row.insertCell(3).innerHTML = reimbs[i].description;
-                row.insertCell(4).innerHTML = reimbs[i].reimbursementType;
-                row.insertCell(5).innerHTML = reimbs[i].authorId;
-                row.insertCell(6).innerHTML = reimbs[i].reimbursementStatus;
-                if (reimbs[i].reimbursementStatus == 'PENDING'){
-                    row.insertCell(7).innerHTML= '<input type="button" class="btn btn-warning" value = "Approve/Deny" onClick="Javacsript:loadApproveDenyReimb(this)">';
+                row.insertCell(4).innerHTML = reimbs[i].type;
+                row.insertCell(5).innerHTML = reimbs[i].authorName;
+                row.insertCell(6).innerHTML = reimbs[i].status;
+                if (reimbs[i].status.toUpperCase() == 'PENDING'){
+                    row.insertCell(7).innerHTML=  '<input type="button" class="btn btn-danger" value = "Approve/Deny" onClick="Javacsript:loadApproveDenyReimb(this)">';
                 }
             }
             
@@ -813,8 +843,8 @@ function approveReimb() {
     xhr.send(reJSON);
     xhr.onreadystatechange = function () {
         if(xhr.readyState == 4 && xhr.status == 201){
-            loadHome();
-            // loadHome();
+            loadSuccess();
+            
         } else if (xhr.readyState == 4 && xhr.status != 201) {
             // loadFailure();
             let err = JSON.parse(xhr.responseText);
@@ -837,7 +867,7 @@ function denyReimb(){
     xhr.send(reJSON);
     xhr.onreadystatechange = function () {
         if(xhr.readyState == 4 && xhr.status == 201){
-            loadHome();
+            loadSuccess();
             // loadHome();
         } else if (xhr.readyState == 4 && xhr.status != 201) {
             // loadFailure();
@@ -913,7 +943,7 @@ function delete_user() {
     xhr.send();
     xhr.onreadystatechange = function () {
         if (xhr.readyState == 4 && xhr.status == 201) {
-            loadHome();
+            loadSuccess();
         } else if (xhr.readyState == 4 && xhr.status != 201) {
             document.getElementById('reg-message').removeAttribute('hidden');
             let err = JSON.parse(xhr.responseText);
@@ -956,7 +986,7 @@ function update_user() {
     xhr.send(newUserJSON);
     xhr.onreadystatechange = function () {
         if (xhr.readyState == 4 && xhr.status == 201) {
-            loadHome();
+            loadSuccess();
         } else if (xhr.readyState == 4 && xhr.status != 201) {
             document.getElementById('reg-message').removeAttribute('hidden');
             let err = JSON.parse(xhr.responseText);
@@ -997,7 +1027,7 @@ function addUser() {
     xhr.send(newUserJSON);
     xhr.onreadystatechange = function () {
         if (xhr.readyState == 4 && xhr.status == 201) {
-            loadHome();
+            loadSuccess();
         } else if (xhr.readyState == 4 && xhr.status != 201) {
             document.getElementById('reg-message').removeAttribute('hidden');
             let err = JSON.parse(xhr.responseText);
@@ -1026,7 +1056,7 @@ function register() {
     xhr.send(newUserJSON);
     xhr.onreadystatechange = function () {
         if (xhr.readyState == 4 && xhr.status == 201) {
-            loadLogin();
+            loadSuccess();
         } else if (xhr.readyState == 4 && xhr.status != 201) {
             document.getElementById('reg-message').removeAttribute('hidden');
             let err = JSON.parse(xhr.responseText);

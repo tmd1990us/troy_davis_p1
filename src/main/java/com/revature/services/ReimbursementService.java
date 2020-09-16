@@ -1,5 +1,6 @@
 package com.revature.services;
 
+import com.revature.dtos.RbDTO;
 import com.revature.exceptions.InvalidRequestException;
 import com.revature.exceptions.ResourceNotFoundException;
 import com.revature.exceptions.ResourcePersistenceException;
@@ -15,39 +16,39 @@ import java.util.Set;
 public class ReimbursementService {
     private ReimbursementsRepository reimbRepo = new ReimbursementsRepository();
 
-    public Set<Reimbursement> getAllReimb(){
-        Set<Reimbursement> reimbursements = reimbRepo.getAllReimbursements();
+    public List<RbDTO> getAllReimb(){
+        List<RbDTO> reimbursements = reimbRepo.getAllReimbursements();
         if (reimbursements.isEmpty()){
             throw new ResourceNotFoundException();
         }
         return reimbursements;
     }
-    public List<Reimbursement> getReimbByUserId(Integer userId){
+    public List<RbDTO> getReimbByUserId(Integer userId){
         if (userId <= 0){
             throw new InvalidRequestException("THE PROVIDED USER ID CANNOT BE LESS THAN OR EQUAL TO ZERO");
         }
-        List<Reimbursement> reimb = reimbRepo.getAllReimbSetByAuthorId(userId);
+        List<RbDTO> reimb = reimbRepo.getAllReimbSetByAuthorId(userId);
         if (reimb.isEmpty()){
             throw new ResourceNotFoundException();
         }
         return reimb;
     }
-    public Set<Reimbursement> getReimbByType(Integer typeId){
+    public List<RbDTO> getReimbByType(Integer typeId){
         if (typeId <= 0 || typeId >=5){
             throw new InvalidRequestException("THE PROVIDED USER ID CANNOT BE LESS THAN OR EQUAL TO ZERO");
         }
-        Set<Reimbursement> reimb = reimbRepo.getAllReimbSetByType(typeId);
+        List<RbDTO> reimb = reimbRepo.getAllReimbSetByType(typeId);
         if (reimb.isEmpty()){
             throw new ResourceNotFoundException();
         }
         return reimb;
     }
 
-    public Set<Reimbursement> getReimbByStatus(Integer statusId){
+    public List<RbDTO> getReimbByStatus(Integer statusId){
         if (statusId <= 0 || statusId >= 4){
             throw new InvalidRequestException("THE PROVIDED USER ID CANNOT BE LESS THAN OR EQUAL TO ZERO");
         }
-        Set<Reimbursement> reimb = reimbRepo.getAllReimbSetByStatus(statusId);
+        List<RbDTO> reimb = reimbRepo.getAllReimbSetByStatus(statusId);
         if (reimb.isEmpty()){
             throw new ResourceNotFoundException();
         }

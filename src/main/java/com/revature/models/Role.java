@@ -4,7 +4,8 @@ public enum Role {
     // values declared within enums are constants and are comma separated
     ADMIN("Admin"),
     FINANCE_MANAGER("Finance Manager"),
-    EMPLOYEE("Employee");
+    EMPLOYEE("Employee"),
+    DELETED("Deleted");
 
     private String roleName;
 

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import com.revature.dtos.ApproveDeny;
 import com.revature.dtos.ErrorResponse;
+import com.revature.dtos.RbDTO;
 import com.revature.exceptions.InvalidRequestException;
 import com.revature.exceptions.ResourceNotFoundException;
 import com.revature.models.Reimbursement;
@@ -35,14 +36,14 @@ public class ReimbursementServlet extends HttpServlet {
             Integer loggedRole = (Integer) req.getSession().getAttribute("loggedinrole");
             if (loggedRole == 3){
                 Integer userId = ((Integer) req.getSession().getAttribute("userId"));
-                List<Reimbursement> reimbs = reimbService.getReimbByUserId(userId);
+                List<RbDTO> reimbs = reimbService.getReimbByUserId(userId);
                 String reimbJSON = mapper.writeValueAsString(reimbs);
                 writer.write(reimbJSON);
                 resp.setStatus(200);
             } else if (statusParam != null){
                 if (((Integer) req.getSession().getAttribute("loggedinrole")) == 2){
                     System.out.println(statusParam);
-                    Set<Reimbursement> reimbs = reimbService.getReimbByStatus(Integer.valueOf(statusParam));
+                    List<RbDTO> reimbs = reimbService.getReimbByStatus(Integer.valueOf(statusParam));
                     String reimbJSON = mapper.writeValueAsString(reimbs);
                     writer.write(reimbJSON);
                     resp.setStatus(200);
@@ -50,13 +51,13 @@ public class ReimbursementServlet extends HttpServlet {
             }else if (typeParam != null){
                 if (((Integer) req.getSession().getAttribute("loggedinrole")) == 2){
                     System.out.println(typeParam);
-                    Set<Reimbursement> reimbs = reimbService.getReimbByType(Integer.valueOf(typeParam));
+                    List<RbDTO> reimbs = reimbService.getReimbByType(Integer.valueOf(typeParam));
                     String reimbJSON = mapper.writeValueAsString(reimbs);
                     writer.write(reimbJSON);
                     resp.setStatus(200);
                 }
             } else if (((Integer) req.getSession().getAttribute("loggedinrole")) == 2){
-                Set<Reimbursement> reimbs = reimbService.getAllReimb();
+                List<RbDTO> reimbs = reimbService.getAllReimb();
                 String reimbJSON = mapper.writeValueAsString(reimbs);
                 writer.write(reimbJSON);
                 resp.setStatus(200);

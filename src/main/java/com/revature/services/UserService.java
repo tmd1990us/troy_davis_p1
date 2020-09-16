@@ -10,6 +10,7 @@ import com.revature.models.User;
 import com.revature.repositories.UserRepository;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -20,8 +21,8 @@ import java.util.Set;
 public class UserService {
     private UserRepository userRepo = new UserRepository();
 
-    public Set<User> getAllUsers(){
-        Set<User> users = userRepo.getAllusers();
+    public List<User> getAllUsers(){
+        List<User> users = userRepo.getAllusers();
         if (users.isEmpty()){
             throw new ResourceNotFoundException();
         }
@@ -89,11 +90,11 @@ public class UserService {
         }
         return userRepo.getAUserByEmail(email).orElseThrow(ResourceNotFoundException::new);
     }
-    public Set<User> getUsersByRole(String role) {
+    public List<User> getUsersByRole(String role) {
         if (role == null || role.isEmpty() || role.trim().equals("")){
             throw new InvalidRequestException("tHE PROVIDED ROLE DOES NOT EXIST");
         }
-        Set<User> users = userRepo.getAllUsersByRole(Role.getByName(role));
+        List<User> users = userRepo.getAllUsersByRole(Role.getByName(role));
         if (users.isEmpty()){
             throw new ResourceNotFoundException();
         }

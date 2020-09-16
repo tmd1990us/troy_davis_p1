@@ -1,5 +1,6 @@
 package com.revature.repositories;
 
+import com.revature.dtos.RbDTO;
 import com.revature.models.Reimbursement;
 import com.revature.models.ReimbursementStatus;
 import com.revature.models.ReimbursementType;
@@ -9,13 +10,22 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.*;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
  * A class to interact with the database to CRUD reimbursement objects
  */
 public class ReimbursementsRepository {
-    private String baseQuery = "SELECT * FROM project_1.ers_reimbursements er ";
+    private String baseQuery = "SELECT er.id, er.amount, er.description, er.reimbursement_status_id, \n" +
+            "er.reimbursement_type_id, er.resolved, er.submitted,  er.author_id , er.resolver_id,\n" +
+            "author.first_name as author_first_name , author.last_name as author_last_name , \n" +
+            "resolver.first_name as resolver_first_name, resolver.last_name as resolver_last_name\n" +
+            "FROM project_1.ers_reimbursements er\n" +
+            "left join project_1.ers_users author \n" +
+            "on er.author_id = author.id\n" +
+            "left join project_1.ers_users resolver \n" +
+            "on er.resolver_id = resolver.id ";
     private String baseInsert = "INSERT INTO project_1.ers_reimbursements ";
     private String baseUpdate = "UPDATE project_1.ers_reimbursements er ";
 
@@ -54,29 +64,29 @@ public class ReimbursementsRepository {
 
     //---------------------------------- READ -------------------------------------------- //
 
-    public Set<Reimbursement> getAllReimbursements() {
-        Set<Reimbursement> reimbursements = new HashSet<>();
+    public List<RbDTO> getAllReimbursements() {
+        List<RbDTO> reimbursements = new ArrayList<>();
         try(Connection conn = ConnectionFactory.getInstance().getConnection()) {
-            String sql = baseQuery;
+            String sql = baseQuery + " order by er.id";
             PreparedStatement ps = conn.prepareStatement(sql);
 
             ResultSet rs = ps.executeQuery();
 
-            reimbursements = mapResultSet(rs);
+            reimbursements = mapResultSetDTO(rs);
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return reimbursements;
     }
 
-    public Set<Reimbursement> getAllReimbSetByStatus(Integer statusId) {
-        Set<Reimbursement> reimbursements = new HashSet<>();
+    public List<RbDTO> getAllReimbSetByStatus(Integer statusId) {
+        List<RbDTO> reimbursements = new ArrayList<>();
         try(Connection conn = ConnectionFactory.getInstance().getConnection()) {
-            String sql = baseQuery + "WHERE er.reimbursement_status_id=? ";
+            String sql = baseQuery + "WHERE er.reimbursement_status_id=? order by er.id";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1,statusId);
             ResultSet rs = ps.executeQuery();
-            reimbursements = mapResultSet(rs);
+            reimbursements = mapResultSetDTO(rs);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -92,7 +102,7 @@ public class ReimbursementsRepository {
     public Optional<Reimbursement> getAReimbByReimbId(Integer reimbId) throws SQLException {
         Optional<Reimbursement> reimbursement = Optional.empty();
         try(Connection conn = ConnectionFactory.getInstance().getConnection()) {
-            String sql = baseQuery + "WHERE er.id=? ";
+            String sql = baseQuery + "WHERE er.id=? order by er.id";
             PreparedStatement ps = conn.prepareStatement(sql);
 
             ps.setInt(1,reimbId);
@@ -110,17 +120,17 @@ public class ReimbursementsRepository {
      * @return a set of reimbursements mapped by the MapResultSet method
      * @throws SQLException e
      */
-    public List<Reimbursement> getAllReimbSetByAuthorId(Integer authorId){
-        List<Reimbursement> reimbursements = new ArrayList<>();
+    public List<RbDTO> getAllReimbSetByAuthorId(Integer authorId){
+        List<RbDTO> reimbursements = new ArrayList<>();
         try(Connection conn = ConnectionFactory.getInstance().getConnection()) {
-            String sql = baseQuery + "WHERE er.author_id=? ";
+            String sql = baseQuery + "WHERE er.author_id=? order by er.id";
             PreparedStatement ps = conn.prepareStatement(sql);
 
             ps.setInt(1,authorId);
 
             ResultSet rs = ps.executeQuery();
 
-            reimbursements = mapResultSetList(rs);
+            reimbursements = mapResultSetDTO(rs);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -134,16 +144,16 @@ public class ReimbursementsRepository {
      * @return a set of reimbursements mapped by the MapResultSet method
      * @throws SQLException e
      */
-    public Set<Reimbursement> getAllReimbSetByAuthorIdAndStatus(Integer authorId, ReimbursementStatus reStat) throws SQLException {
-        Set<Reimbursement> reimbursements = new HashSet<>();
+    public List<RbDTO> getAllReimbSetByAuthorIdAndStatus(Integer authorId, ReimbursementStatus reStat) throws SQLException {
+        List<RbDTO> reimbursements = new ArrayList<>();
         try(Connection conn = ConnectionFactory.getInstance().getConnection()) {
-            String sql = baseQuery + "WHERE er.author_id=? AND er.reimbursement_status_id=? ";
+            String sql = baseQuery + "WHERE er.author_id=? AND er.reimbursement_status_id=? order by er.id";
             PreparedStatement ps = conn.prepareStatement(sql);
 
             ps.setInt(1,authorId);
             ps.setInt(2,reStat.ordinal() + 1);
             ResultSet rs = ps.executeQuery();
-            reimbursements = mapResultSet(rs);
+            reimbursements = mapResultSetDTO(rs);
         }
         return reimbursements;
     }
@@ -155,28 +165,28 @@ public class ReimbursementsRepository {
      * @return a set of reimbursements mapped by the MapResultSet method
      * @throws SQLException e
      */
-    public Set<Reimbursement> getAllReimbSetByAuthorIdAndType(Integer authorId, ReimbursementType reType) throws SQLException {
-        Set<Reimbursement> reimbursements = new HashSet<>();
+    public List<RbDTO> getAllReimbSetByAuthorIdAndType(Integer authorId, ReimbursementType reType) throws SQLException {
+        List<RbDTO> reimbursements = new ArrayList<>();
         try(Connection conn = ConnectionFactory.getInstance().getConnection()) {
-            String sql = baseQuery + "WHERE er.author_id=? AND er.reimbursement_type_id=? ";
+            String sql = baseQuery + "WHERE er.author_id=? AND er.reimbursement_type_id=? order by er.id";
             PreparedStatement ps = conn.prepareStatement(sql);
 
             ps.setInt(1,authorId);
             ps.setInt(2,reType.ordinal() + 1);
             ResultSet rs = ps.executeQuery();
-            reimbursements = mapResultSet(rs);
+            reimbursements = mapResultSetDTO(rs);
         }
         return reimbursements;
     }
 
-    public Set<Reimbursement> getAllReimbSetByType(Integer typeId)  {
-        Set<Reimbursement> reimbursements = new HashSet<>();
+    public List<RbDTO> getAllReimbSetByType(Integer typeId)  {
+        List<RbDTO> reimbursements = new ArrayList<>();
         try(Connection conn = ConnectionFactory.getInstance().getConnection()) {
-            String sql = baseQuery + "WHERE er.reimbursement_type_id=? ";
+            String sql = baseQuery + "WHERE er.reimbursement_type_id=? order by er.id";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1,typeId);
             ResultSet rs = ps.executeQuery();
-            reimbursements = mapResultSet(rs);
+            reimbursements = mapResultSetDTO(rs);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -189,17 +199,17 @@ public class ReimbursementsRepository {
      * @return a set of reimbursements mapped by the MapResultSet method
      * @throws SQLException e
      */
-    public Set<Reimbursement> getAllReimbSetByResolverId(Integer resolverId) throws SQLException {
-        Set<Reimbursement> reimbursements = new HashSet<>();
+    public List<RbDTO> getAllReimbSetByResolverId(Integer resolverId) throws SQLException {
+        List<RbDTO> reimbursements = new ArrayList<>();
         try(Connection conn = ConnectionFactory.getInstance().getConnection()) {
-            String sql = baseQuery + "WHERE er.resolver_id=? ";
+            String sql = baseQuery + "WHERE er.resolver_id=? order by er.id";
             PreparedStatement ps = conn.prepareStatement(sql);
 
             ps.setInt(1,resolverId);
 
             ResultSet rs = ps.executeQuery();
 
-            reimbursements = mapResultSet(rs);
+            reimbursements = mapResultSetDTO(rs);
         }
         return reimbursements;
     }
@@ -211,16 +221,16 @@ public class ReimbursementsRepository {
      * @return a set of reimbursements mapped by the MapResultSet method
      * @throws SQLException e
      */
-    public Set<Reimbursement> getAllReimbSetByResolverIdAndStatus(Integer resolverId, ReimbursementStatus reStat) throws SQLException {
-        Set<Reimbursement> reimbursements = new HashSet<>();
+    public List<RbDTO> getAllReimbSetByResolverIdAndStatus(Integer resolverId, ReimbursementStatus reStat) throws SQLException {
+        List<RbDTO> reimbursements = new ArrayList<>();
         try(Connection conn = ConnectionFactory.getInstance().getConnection()) {
-            String sql = baseQuery + "WHERE er.resolver_id=? AND er.reimbursement_status_id=? ";
+            String sql = baseQuery + "WHERE er.resolver_id=? AND er.reimbursement_status_id=? order by er.id";
             PreparedStatement ps = conn.prepareStatement(sql);
 
             ps.setInt(1,resolverId);
             ps.setInt(2,reStat.ordinal() + 1);
             ResultSet rs = ps.executeQuery();
-            reimbursements = mapResultSet(rs);
+            reimbursements = mapResultSetDTO(rs);
         }
         return reimbursements;
     }
@@ -232,16 +242,16 @@ public class ReimbursementsRepository {
      * @return a set of reimbursements mapped by the MapResultSet method
      * @throws SQLException e
      */
-    public Set<Reimbursement> getAllReimbSetByResolverIdAndType(Integer resolverId, ReimbursementType reType) throws SQLException {
-        Set<Reimbursement> reimbursements = new HashSet<>();
+    public List<RbDTO> getAllReimbSetByResolverIdAndType(Integer resolverId, ReimbursementType reType) throws SQLException {
+        List<RbDTO> reimbursements = new ArrayList<>();
         try(Connection conn = ConnectionFactory.getInstance().getConnection()) {
-            String sql = baseQuery + "WHERE er.resolver_id=? AND er.reimbursement_type_id=? ";
+            String sql = baseQuery + "WHERE er.resolver_id=? AND er.reimbursement_type_id=? order by er.id";
             PreparedStatement ps = conn.prepareStatement(sql);
 
             ps.setInt(1,resolverId);
             ps.setInt(2,reType.ordinal() + 1);
             ResultSet rs = ps.executeQuery();
-            reimbursements = mapResultSet(rs);
+            reimbursements = mapResultSetDTO(rs);
         }
         return reimbursements;
     }
@@ -452,5 +462,29 @@ public class ReimbursementsRepository {
         return reimbursements;
     }
 
+    private List<RbDTO> mapResultSetDTO(ResultSet rs) throws SQLException {
+        List<RbDTO> reimbs = new ArrayList<>();
+        while (rs.next()){
+            RbDTO temp = new RbDTO();
+            temp.setId(rs.getInt("id"));
+            temp.setAmount(rs.getDouble("amount"));
+            temp.setSubmitted(rs.getTimestamp("submitted").toString().substring(0,19));
+            temp.setDescription(rs.getString("description"));
+            temp.setAuthorName(rs.getString("author_first_name") + " " + rs.getString("author_last_name"));
+            temp.setStatus(ReimbursementStatus.getByNumber(rs.getInt("reimbursement_status_id")).toString());
+            temp.setType(ReimbursementType.getByNumber(rs.getInt("reimbursement_type_id")).toString());
+            try {
+                temp.setResolved(rs.getTimestamp("resolved").toString().substring(0,19));
+                temp.setResolverName(rs.getString("resolver_first_name") + " " + rs.getString("resolver_last_name"));
+            } catch (NullPointerException e){
+                //If Reimb. has not been resolved DB will return null for these values:
+                temp.setResolved("");
+                temp.setResolverName("");
+            }
 
+            reimbs.add(temp);
+        }
+        System.out.println(reimbs);
+        return reimbs;
+    }
 }

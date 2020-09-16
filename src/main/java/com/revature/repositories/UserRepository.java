@@ -1,12 +1,9 @@
 package com.revature.repositories;
 
-import com.revature.models.ReimbursementType;
 import com.revature.models.Role;
 import com.revature.models.User;
 import com.revature.util.ConnectionFactory;
-import com.revature.util.HibernateUtils;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
+
 
 import java.sql.*;
 import java.util.*;
@@ -51,12 +48,12 @@ public class UserRepository {
 
     //---------------------------------- READ -------------------------------------------- //
 
-    public Set<User> getAllusers() {
-        Set<User> users = new HashSet<>();
+    public List<User> getAllusers() {
+        List<User> users = new ArrayList<>();
 
         try (Connection conn = ConnectionFactory.getInstance().getConnection()) {
 
-            String sql = baseQuery;
+            String sql = baseQuery + " order by eu.id";
 
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
@@ -153,10 +150,10 @@ public class UserRepository {
      * @return returns a set of users
      * @throws SQLException e
      */
-    public Set<User> getAllUsersByRole(Role role) {
-        Set<User> user = new HashSet<>();
+    public List<User> getAllUsersByRole(Role role) {
+        List<User> user = new ArrayList<>();
         try (Connection conn = ConnectionFactory.getInstance().getConnection()){
-            String sql = baseQuery + "WHERE eu.user_role_id=? ";
+            String sql = baseQuery + "WHERE eu.user_role_id=? order by eu.id";
             PreparedStatement psmt = conn.prepareStatement(sql);
             psmt.setInt(1,role.ordinal() + 1);
             ResultSet rs = psmt.executeQuery();
@@ -243,8 +240,8 @@ public class UserRepository {
      * @return a set of users
      * @throws SQLException e
      */
-    private Set<User> mapResultSet(ResultSet rs) throws SQLException {
-        Set<User> users = new HashSet<>();
+    private List<User> mapResultSet(ResultSet rs) throws SQLException {
+        List<User> users = new ArrayList<>();
         while (rs.next()){
             User temp = new User();
             temp.setUserId(rs.getInt("id"));

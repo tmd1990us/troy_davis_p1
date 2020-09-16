@@ -18,6 +18,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Set;
 
 @WebServlet("/users/*")
@@ -55,7 +56,7 @@ public class UserServlet extends HttpServlet {
             }
             if (roleParam != null){
                 //Get all users by role if present
-                Set<User> users = userService.getUsersByRole(roleParam);
+                List<User> users = userService.getUsersByRole(roleParam);
                 String userJSON = mapper.writeValueAsString(users);
                 writer.write(userJSON);
                 resp.setStatus(200);
@@ -63,7 +64,7 @@ public class UserServlet extends HttpServlet {
             else {
                 Integer loggedInRole = (Integer) req.getSession().getAttribute("loggedinrole");
                 if (loggedInRole == 1){
-                    Set<User> users = userService.getAllUsers();
+                    List<User> users = userService.getAllUsers();
                     String usersJSON = mapper.writeValueAsString(users);
                     writer.write(usersJSON);
                     resp.setStatus(200); //not required will be 200 by default
