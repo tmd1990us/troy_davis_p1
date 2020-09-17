@@ -169,7 +169,7 @@ public class UserRepository {
     public boolean updateAUser(User newUser) {
         try(Connection conn = ConnectionFactory.getInstance().getConnection()) {
             String sql = baseUpdate +
-                    "SET first_name=?, last_name=?, email=?, user_role_id=?, username=?, password=?\n" +
+                    "SET first_name=?, last_name=?, email=?, user_role_id=?, username=?, password= project_1.crypt(?, project_1.gen_salt('bf', 10))\n" +
                     "WHERE id=?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1,newUser.getFirstname());

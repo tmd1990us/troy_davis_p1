@@ -8,6 +8,7 @@ import com.revature.util.ConnectionFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.*;
 import java.text.SimpleDateFormat;
@@ -52,7 +53,6 @@ public class ReimbursementsRepository {
             ps.setInt(3,reimbursement.getAuthorId());
             //Reimburesements are submitted with PENDING  status by Default!
             ps.setInt(4,reimbursement.getReimbursementType().ordinal() + 1);
-
             //get the number of affected rows
             int rowsInserted = ps.executeUpdate();
             return rowsInserted != 0;

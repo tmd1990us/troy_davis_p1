@@ -6,32 +6,38 @@
     <title>ERS Welcome!</title>
     <link rel="stylesheet" type="text/css" href="/ers/css/ers_styles.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="icon" href="icon.ico"/>
+    
 </head>
-<body class="text-center">
+<body >
 
     <div id="navbar">
-        <nav class="navbar navbar-expand-lg bg-dark">
-            <a class="navbar-brand" href="#">ERS</a>
+        <nav class="navbar navbar-expand-lg bg-light">
+            <img src="icon.ico">
             <button class="navbar-toggler" type="button" data-toggle="collapse"
                     data-target="#navbarNavAltMarkup"
                     aria-controls="navbarNavAltMarkup" aria-expanded="false"
                     aria-label="Toggle navigation">
-                <span id="nav-dropdown" class="navbar-toggler-icon">Show</span>
+                <span id="nav-dropdown" class="navbar-toggler-icon">
+                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-menu-button-wide-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" d="M14 7H2a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1zM2 6a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2H2z"/>
+                    <path fill-rule="evenodd" d="M15 11H1v-1h14v1zM2 12.5a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM1.5 0A1.5 1.5 0 0 0 0 1.5v2A1.5 1.5 0 0 0 1.5 5h13A1.5 1.5 0 0 0 16 3.5v-2A1.5 1.5 0 0 0 14.5 0h-13zm1 2a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3zm9.927.427l.396.396a.25.25 0 0 0 .354 0l.396-.396A.25.25 0 0 0 13.396 2h-.792a.25.25 0 0 0-.177.427z"/>
+                  </svg>
+                </span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div class="navbar-nav">
-                    <a class="nav-item nav-link" id="toLogin">Login</a>
-                    <a class="nav-item nav-link" id="toRegister">Register</a>
-                    <a class="nav-item nav-link" id="toHome">Home</a>
-                    <a class="nav-item nav-link" id="toProfile">Profile</a>
-                    <a class="nav-item nav-link" id="toLogout">Logout</a>
+                    <a class="nav-item nav-link" id="toLogin"> <button type="button" class="btn btn-outline-warning">Login</button> </a>
+                    <a class="nav-item nav-link" id="toRegister"><button type="button" class="btn btn-outline-warning">Register</button></a>
+                    <a class="nav-item nav-link" id="toHome"><button type="button" class="btn btn-outline-warning">Home</button></a>
+                    <a class="nav-item nav-link" id="toLogout"><button type="button" class="btn btn-outline-warning">Logout</button></a>
                 </div>
             </div>
         </nav>
     </div>
 
   <main class="container">
-    <div id="app-view"></div>
+    <div id="app-view" class="text-center"></div>
   </main>
 
 

@@ -1,5 +1,6 @@
 package com.revature.models;
 
+import java.io.File;
 import java.sql.Timestamp;
 import java.util.Objects;
 
@@ -10,7 +11,7 @@ public class Reimbursement {
     private Timestamp resolved;
     private String description;
     //TODO: ATTACH IMAGE STORE
-    //private Image image;
+    private File receipt;
     private int authorId;
     private int resolverId;
     private ReimbursementStatus reimbursementStatus;
@@ -51,6 +52,14 @@ public class Reimbursement {
         this.resolverId = resolverId;
         this.reimbursementStatus = reimbursementStatus;
         this.reimbursementType = reimbursementType;
+    }
+
+    public File getReceipt() {
+        return receipt;
+    }
+
+    public void setReceipt(File receipt) {
+        this.receipt = receipt;
     }
 
     public Integer getId() {

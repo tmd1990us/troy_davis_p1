@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 public class RequestViewHelper {
     public String process(HttpServletRequest req) {
         Integer loggedInRole = (Integer) req.getSession().getAttribute("loggedinrole");
+        String pr = (String) req.getSession().getAttribute("principal");
         switch (req.getRequestURI()) {
             case "/ers/login.view":
             case "/login.view":
@@ -58,27 +59,36 @@ public class RequestViewHelper {
 
             case "/ers/submit_reimb.view":
             case "/submit_reimb.view":
-                return "partials/emp/submit_reimb.html";
+                if (loggedInRole == 2 || loggedInRole == 3) {
+                    return "partials/emp/submit_reimb.html";
+                }
 
             case "/ers/view_emp_reimb.view":
             case "/view_emp_reimb.view":
-                return "partials/emp/view_reimb.html";
+                if (loggedInRole == 3) {
+                    return "partials/emp/view_reimb.html";
+                }
 
             case "/ers/view_all_reimb.view":
             case "/view_all_reimb.view":
-                return "partials/fin/view_reimb.html";
+                if (loggedInRole == 2) {
+                    return "partials/fin/view_reimb.html";
+                }
 
             case "/ers/update_emp_reimb.view":
             case "/update_emp_reimb.view":
-                return "partials/emp/update_reimb.html";
+                if (loggedInRole == 3) {
+                    return "partials/emp/update_reimb.html";
+                }
 
             case "/ers/update_fin_reimb.view":
             case "/update_fin_reimb.view":
-                return "partials/fin/reimb_detail.html";
+                if (loggedInRole == 2) {
+                    return "partials/fin/reimb_detail.html";
+                }
 
             case "/ers/home.view":
             case "/home.view":
-                String pr = (String) req.getSession().getAttribute("principal");
                 if(pr == null || pr.equals("")){
                     //user not logged in
                     return "partials/login.html";
@@ -96,7 +106,7 @@ public class RequestViewHelper {
                     return "/partials/fin/dash.html";
                 }
             default:
-                return null;
+                return "/partials/animations/unauth.html";
 
         }
     }

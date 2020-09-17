@@ -49,7 +49,7 @@ public class AuthServlet extends HttpServlet {
             resp.setStatus(401);
             ErrorResponse err = new ErrorResponse(401, ae.getMessage());
             String errJSON = mapper.writeValueAsString(err);
-
+            respWriter.write(errJSON);
         } catch (Exception e) {
             e.printStackTrace();
             resp.setStatus(500); // 500 = INTERNAL SERVER ERROR

@@ -221,6 +221,7 @@ function loadApproveDenyReimb(obj) {
     let reimbID = x.innerHTML;
     localStorage.setItem('reimbID',reimbID);
     let amount = document.getElementById("view-all-reimb-table").rows[index].cells[1].innerHTML;
+    let sb = document.getElementById("view-all-reimb-table").rows[index].cells[2].innerHTML;
     let description = document.getElementById("view-all-reimb-table").rows[index].cells[3].innerHTML;
     let type = document.getElementById("view-all-reimb-table").rows[index].cells[4].innerHTML;
     let authorId = document.getElementById("view-all-reimb-table").rows[index].cells[5].innerHTML;
@@ -238,6 +239,7 @@ function loadApproveDenyReimb(obj) {
             document.getElementById('description').innerHTML = description;
             document.getElementById('type').innerHTML = type;
             document.getElementById('authorId').innerHTML = authorId;
+            document.getElementById('submitted').innerHTML = sb;
             document.getElementById('approve').addEventListener('click', approveReimb);
             document.getElementById('deny').addEventListener('click', denyReimb);
             document.getElementById('cancel').addEventListener('click', loadViewAllReimb);
@@ -250,7 +252,7 @@ function loadUpdateReimb(obj){
     let x = document.getElementById("view-reimb-table").rows[index].cells[0];
     let reimbID = x.innerHTML;
     localStorage.setItem('reimbID',reimbID);
-    let amount = document.getElementById("view-reimb-table").rows[index].cells[1].innerHTML;
+    let amount = document.getElementById("view-reimb-table").rows[index].cells[1].innerHTML.replace("$", "");
     let description = document.getElementById("view-reimb-table").rows[index].cells[3].innerHTML;
     let type = document.getElementById("view-reimb-table").rows[index].cells[4].innerHTML;
     let xhr = new XMLHttpRequest();
@@ -291,12 +293,14 @@ function loadUpdateUser(obj){
     xhr.onreadystatechange = function () {
         if (xhr.readyState == 4 && xhr.status == 200) {
             APP_VIEW.innerHTML = xhr.responseText;
+            document.getElementById('reg-message').setAttribute('hidden', true);
             document.getElementById('uID').innerHTML = localStorage.getItem('userID');
             document.getElementById('fn').setAttribute('value', fn);
             document.getElementById('ln').setAttribute('value', ln);
             document.getElementById('email').setAttribute('value', email);
             document.getElementById('reg-username').setAttribute('value', un);
-            document.getElementById('update').addEventListener('click', update_user);
+            document.getElementById('reg-button-container').addEventListener('mouseover', validateRegisterForm);
+            document.getElementById('register').addEventListener('click', update_user);
             document.getElementById('cancel').addEventListener('click', loadViewAllUsers);
         }
     }
@@ -413,10 +417,15 @@ function configureAddUserView() {
     document.getElementById('register').setAttribute('disabled', true);
     document.getElementById('reg-button-container').addEventListener('mouseover', validateRegisterForm);
     document.getElementById('register').addEventListener('click', addUser);
+    document.getElementById('cancel').addEventListener('click', loadHome);
 }
 
 function configureSubmitReimbView() {
-    document.getElementById('submit').addEventListener('click', submitReimb);
+    document.getElementById('reg-message').setAttribute('hidden', true);
+    document.getElementById('register').setAttribute('disabled', true);
+    document.getElementById('reg-button-container').addEventListener('mouseover', validateReimbursementForm);
+    document.getElementById('register').addEventListener('click', submitReimb);
+    
 }
 
 function configureViewAllUsersView() {
@@ -524,6 +533,8 @@ function configureViewAllReimbView(){
                 row.insertCell(6).innerHTML = reimbs[i].status;
                 if (reimbs[i].status.toUpperCase() == 'PENDING'){
                     row.insertCell(7).innerHTML= '<input type="button" class="btn btn-danger" value = "Approve/Deny" onClick="Javacsript:loadApproveDenyReimb(this)">';
+                }else {
+                    row.insertCell(7).innerHTML= '<input type="button" class="btn btn-disabled" value = "Completed">';
                 }
             }
             
@@ -561,6 +572,8 @@ function  configureViewAllReimbByTypeFoodView(){
                 row.insertCell(6).innerHTML = reimbs[i].status;
                 if (reimbs[i].status.toUpperCase() == 'PENDING'){
                     row.insertCell(7).innerHTML=  '<input type="button" class="btn btn-danger" value = "Approve/Deny" onClick="Javacsript:loadApproveDenyReimb(this)">';
+                }else {
+                    row.insertCell(7).innerHTML= '<input type="button" class="btn btn-disabled" value = "Completed">';
                 }
             }
             
@@ -598,6 +611,8 @@ function  configureViewAllReimbByTypeLodgingView(){
                 row.insertCell(6).innerHTML = reimbs[i].status;
                 if (reimbs[i].status.toUpperCase() == 'PENDING'){
                     row.insertCell(7).innerHTML= '<input type="button" class="btn btn-danger" value = "Approve/Deny" onClick="Javacsript:loadApproveDenyReimb(this)">';
+                }else {
+                    row.insertCell(7).innerHTML= '<input type="button" class="btn btn-disabled" value = "Completed">';
                 }
             }
             
@@ -635,6 +650,8 @@ function  configureViewAllReimbByTypeTravelView(){
                 row.insertCell(6).innerHTML = reimbs[i].status;
                 if (reimbs[i].status.toUpperCase() == 'PENDING'){
                     row.insertCell(7).innerHTML= '<input type="button" class="btn btn-danger" value = "Approve/Deny" onClick="Javacsript:loadApproveDenyReimb(this)">';
+                }else {
+                    row.insertCell(7).innerHTML= '<input type="button" class="btn btn-disabled" value = "Completed">';
                 }
             }
             
@@ -672,6 +689,8 @@ function  configureViewAllReimbByTypeOtherView(){
                 row.insertCell(6).innerHTML = reimbs[i].status;
                 if (reimbs[i].status.toUpperCase() == 'PENDING'){
                     row.insertCell(7).innerHTML= '<input type="button" class="btn btn-danger" value = "Approve/Deny" onClick="Javacsript:loadApproveDenyReimb(this)">';
+                }else {
+                    row.insertCell(7).innerHTML= '<input type="button" class="btn btn-disabled" value = "Completed">';
                 }
             }
             
@@ -709,6 +728,8 @@ function configureViewAllReimbByStatusPendingView() {
                 row.insertCell(6).innerHTML = reimbs[i].status;
                 if (reimbs[i].status.toUpperCase() == 'PENDING'){
                     row.insertCell(7).innerHTML= '<input type="button" class="btn btn-danger" value = "Approve/Deny" onClick="Javacsript:loadApproveDenyReimb(this)">';
+                }else {
+                    row.insertCell(7).innerHTML= '<input type="button" class="btn btn-disabled" value = "Completed">';
                 }
             }
             
@@ -746,6 +767,8 @@ function configureViewAllReimbByStatusApprovedView() {
                 row.insertCell(6).innerHTML = reimbs[i].status;
                 if (reimbs[i].status.toUpperCase() == 'PENDING'){
                     row.insertCell(7).innerHTML= '<input type="button" class="btn btn-danger" value = "Approve/Deny" onClick="Javacsript:loadApproveDenyReimb(this)">';
+                }else {
+                    row.insertCell(7).innerHTML= '<input type="button" class="btn btn-disabled" value = "Completed">';
                 }
             }
             
@@ -783,6 +806,8 @@ function configureViewAllReimbByStatusDeniedView() {
                 row.insertCell(6).innerHTML = reimbs[i].status;
                 if (reimbs[i].status.toUpperCase() == 'PENDING'){
                     row.insertCell(7).innerHTML=  '<input type="button" class="btn btn-danger" value = "Approve/Deny" onClick="Javacsript:loadApproveDenyReimb(this)">';
+                }else {
+                    row.insertCell(7).innerHTML= '<input type="button" class="btn btn-disabled" value = "Completed">';
                 }
             }
             
@@ -876,10 +901,12 @@ function submitReimb(){
     let tp = document.getElementById('type').value;
     let ds = document.getElementById('description').value;
     let am = document.getElementById('amount').value;
+    
     let thisReimb = {
         reimbursementType: tp,
         description: ds,
-        amount: am
+        amount: am,
+        
     }
     console.log(thisReimb);
     let reimbJSON = JSON.stringify(thisReimb);
@@ -919,6 +946,13 @@ function login() {
             var homeUser = JSON.parse(localStorage.getItem('authUser'));
             var role = homeUser.role;
             localStorage.setItem('role', role);
+            if(role == 4){
+                document.getElementById('login-message').removeAttribute('hidden');
+                document.getElementById('login-message').innerText = 'Sorry your account has been deleted. Please BEG for Forgiveness from an Aniministrator.';
+                localStorage.removeItem('authUser');
+                localStorage.removeItem('role');
+                return;
+            } 
             loadHome();
         } else if (xhr.readyState == 4 && xhr.status == 401) {
             document.getElementById('login-message').removeAttribute('hidden');
@@ -1147,6 +1181,21 @@ function validateRegisterForm() {
     let un = document.getElementById('reg-username').value;
     let pw = document.getElementById('reg-password').value;
     if (!fn || !ln || !email || !un || !pw) {
+        document.getElementById('reg-message').removeAttribute('hidden');
+        document.getElementById('reg-message').innerText = 'You must provided values for all fields in the form!'
+        document.getElementById('register').setAttribute('disabled', true);
+    } else {
+        document.getElementById('register').removeAttribute('disabled');
+        document.getElementById('reg-message').setAttribute('hidden', true);
+    }
+}
+function validateReimbursementForm() {
+    console.log('in validateReimbursementForm()');
+    let am = document.getElementById('amount').value;
+    let ds = document.getElementById('description').value;
+    let ty = document.getElementById('type').value;
+    
+    if (!am || !ds || !ty ) {
         document.getElementById('reg-message').removeAttribute('hidden');
         document.getElementById('reg-message').innerText = 'You must provided values for all fields in the form!'
         document.getElementById('register').setAttribute('disabled', true);
